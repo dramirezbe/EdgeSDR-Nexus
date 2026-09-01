@@ -1,6 +1,6 @@
-# Plataforma ANE
+# Plataforma regulatory body
 
-Este repositorio agrupa la plataforma de sensado espectral de la ANE. En terminos simples, la plataforma permite operar sensores RF, recibir mediciones, analizarlas y convertirlas en informacion util para monitoreo, campañas y reportes de cumplimiento.
+Este repositorio agrupa la plataforma de sensado espectral de la regulatory body. En terminos simples, la plataforma permite operar sensores RF, recibir mediciones, analizarlas y convertirlas en informacion util para monitoreo, campañas y reportes de cumplimiento.
 
 La vista general es corta a proposito. Para profundizar en cada parte, hay diagramas especificos en `frontend/`, `backend/` y `postprocesamiento/`.
 

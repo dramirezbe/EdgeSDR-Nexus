@@ -44,7 +44,7 @@ Full index: [scaffold/INDEX.md](scaffold/INDEX.md)
 | File | Purpose |
 |------|---------|
 | `README.md` | Project overview and quick start |
-| `README_PLATFORM.md` | Platform overview (ANE, data flow, Spanish) |
+| `README_PLATFORM.md` | Platform overview (regulatory body, data flow, Spanish) |
 | `docker-compose.yml` | Service orchestration |
 | `Edge-Node/AGENTS.md` | AI agent entry point for edge node only |
 | `scaffold/_meta/manifest.json` | Machine-readable scaffold index |

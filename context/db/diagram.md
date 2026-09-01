@@ -1,4 +1,4 @@
-# ANE DB Starter Diagram
+# regulatory body DB Starter Diagram
 
 This diagram is built step by step from pasted `psql` output. It includes confirmed entities, the first captured columns, and relationships backed by visible constraints.
 

@@ -1,6 +1,6 @@
-# ANE Backend
+# regulatory body Backend
 
-Backend para el sistema de monitoreo de señales de radio ANE.
+Backend para el sistema de monitoreo de señales de radio regulatory body.
 
 ## Características
 

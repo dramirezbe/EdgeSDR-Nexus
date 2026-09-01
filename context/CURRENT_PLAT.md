@@ -1,4 +1,4 @@
-# Contexto Actual de la Plataforma ANE
+# Contexto Actual de la Plataforma regulatory body
 
 Última actualización: 2026-05-21
 
@@ -20,7 +20,7 @@ No se usó contenido interno de `workshop-platform/` como fuente, excepto este a
 
 ## Visión General
 
-La Plataforma ANE es un sistema de sensado y monitoreo espectral. Permite operar sensores RF en campo, recibir mediciones, visualizar datos en vivo, administrar campañas de medición, revisar alertas y generar reportes de cumplimiento.
+La Plataforma regulatory body es un sistema de sensado y monitoreo espectral. Permite operar sensores RF en campo, recibir mediciones, visualizar datos en vivo, administrar campañas de medición, revisar alertas y generar reportes de cumplimiento.
 
 El flujo general es:
 
@@ -556,4 +556,4 @@ Despliegue recomendado en documentación de migración:
 
 ## Resumen Ejecutivo
 
-La Plataforma ANE es una aplicación web con backend TypeScript que coordina sensores RF, datos en tiempo real, históricos, campañas y reportes. El frontend guía a la persona desde autenticación y vista general hasta monitoreo, campañas, alertas, configuración y resultados. El backend centraliza autenticación, gestión de recursos, recepción de datos, WebSocket, persistencia, alertas, campañas y reportes. Los sensores alimentan la plataforma con estado, GPS, espectro y audio. El postprocesamiento Python transforma mediciones de campaña en detecciones y evaluación de cumplimiento normativo.
+La Plataforma regulatory body es una aplicación web con backend TypeScript que coordina sensores RF, datos en tiempo real, históricos, campañas y reportes. El frontend guía a la persona desde autenticación y vista general hasta monitoreo, campañas, alertas, configuración y resultados. El backend centraliza autenticación, gestión de recursos, recepción de datos, WebSocket, persistencia, alertas, campañas y reportes. Los sensores alimentan la plataforma con estado, GPS, espectro y audio. El postprocesamiento Python transforma mediciones de campaña en detecciones y evaluación de cumplimiento normativo.

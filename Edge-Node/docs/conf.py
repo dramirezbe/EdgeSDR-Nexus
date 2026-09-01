@@ -83,5 +83,5 @@ html_theme = "furo"
 html_logo = "_static/Logo_GCPDS_spanish.png"
 
 project = 'Sensor con tecnologías SDR para el monitoreo del espectro'
-copyright = '2026, ANE'
+copyright = '2026, regulatory body'
 author = 'BACN, GCPDS'

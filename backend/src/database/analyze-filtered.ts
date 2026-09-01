@@ -2,7 +2,7 @@ import { readFileSync } from 'fs';
 import { join } from 'path';
 import { parse } from 'csv-parse/sync';
 
-const csvPath = join('C:', 'ANE REALTIME', 'consolidado.csv');
+const csvPath = join('C:', 'regulatory body REALTIME', 'consolidado.csv');
 const fileContent = readFileSync(csvPath, 'utf-8');
 
 const cleanNumber = (value: string): number => {

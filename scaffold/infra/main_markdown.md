@@ -4,7 +4,7 @@
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose
-Docker orchestration, nginx reverse proxy, and deployment/backup scripts for the ANE platform. Production target: single Debian server at `rsm.ane.gov.co`.
+Docker orchestration, nginx reverse proxy, and deployment/backup scripts for the regulatory body platform. Production target: single Debian server at `rsm.ane.gov.co`.
 
 ## Tech stack & conventions
 - Docker Compose for multi-service orchestration

@@ -56,7 +56,7 @@ setupSwagger(app);
  *               properties:
  *                 message:
  *                   type: string
- *                   example: ANE Backend API
+ *                   example: regulatory body Backend API
  *                 version:
  *                   type: string
  *                   example: 1.0.0
@@ -81,7 +81,7 @@ setupSwagger(app);
  */
 app.get('/', (req: Request, res: Response) => {
   res.json({
-    message: 'ANE Backend API',
+    message: 'regulatory body Backend API',
     version: '1.0.0',
     endpoints: {
       sensors: '/api/sensors',
@@ -150,7 +150,7 @@ setInterval(async () => {
 // Iniciar servidor
 server.listen(PORT, () => {
   console.log('==========================================');
-  console.log('🚀 ANE Backend Server Started');
+  console.log('🚀 regulatory body Backend Server Started');
   console.log('==========================================');
   console.log(`📡 HTTP Server: http://localhost:${PORT}`);
   console.log(`🔌 WebSocket: ws://localhost:${PORT}/ws`);  console.log(`🎵 Audio WS: ws://localhost:${PORT}/ws/audio/sensor/{id}`);

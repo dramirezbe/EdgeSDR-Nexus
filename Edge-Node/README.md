@@ -205,7 +205,7 @@ Snapshot/placeholder del esquema esperado:
 
 Campos relevantes para calibración y GPS:
 - `last_lat`, `last_lng`, `changed_gps`
-- `legal_freqs` (cache para evitar recargar DB ANE cada corrida)
+- `legal_freqs` (cache para evitar recargar DB regulatory body cada corrida)
 - `ppm_error`, `last_kal_ms`
 
 Campos relevantes para pacing RF:

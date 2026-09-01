@@ -45,7 +45,7 @@ export function initWebSocket(server: Server) {
     // Enviar mensaje de bienvenida
     ws.send(JSON.stringify({
       type: 'connected',
-      message: 'Connected to ANE WebSocket server'
+      message: 'Connected to regulatory body WebSocket server'
     }));
   });
 

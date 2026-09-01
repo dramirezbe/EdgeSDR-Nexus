@@ -1,6 +1,6 @@
 # Flujo general del frontend
 
-Este documento resume, en lenguaje simple, como se recorre el frontend de la plataforma ANE. La idea no es explicar el codigo, sino mostrar que ve y que decide una persona cuando entra a la aplicacion.
+Este documento resume, en lenguaje simple, como se recorre el frontend de la plataforma regulatory body. La idea no es explicar el codigo, sino mostrar que ve y que decide una persona cuando entra a la aplicacion.
 
 ## Bloques principales
 

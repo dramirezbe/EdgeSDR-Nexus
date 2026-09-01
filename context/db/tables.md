@@ -1,4 +1,4 @@
-# ANE DB Captured Tables
+# regulatory body DB Captured Tables
 
 This file records table-level details pasted from `psql`. Keep it factual: only add columns, indexes, and references that appear in captured output.
 

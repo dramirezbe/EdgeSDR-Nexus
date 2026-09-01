@@ -1,6 +1,6 @@
-# Contexto del Frontend — Plataforma ANE
+# Contexto del Frontend — Plataforma regulatory body
 
-Este documento consolida el contexto del frontend de la Plataforma ANE como
+Este documento consolida el contexto del frontend de la Plataforma regulatory body como
 insumo para redactar el capítulo "Plataforma web en la nube" del informe final.
 Toda la información se presenta desde una perspectiva metodológica, de
 arquitectura y de decisiones de diseño, sin referencias a archivos de código ni
@@ -32,7 +32,7 @@ La plataforma está dirigida a dos perfiles principales de personas usuarias:
   de sensores, administración de usuarios y parámetros generales del sistema.
 
 El acceso se realiza mediante autenticación institucional a través de
-Microsoft Azure AD, utilizando las credenciales corporativas de la ANE. La
+Microsoft Azure AD, utilizando las credenciales corporativas de la regulatory body. La
 plataforma también contempla un mecanismo de acceso administrativo local para
 cuentas de servicio. Los roles se asignan en la base de datos y determinan
 qué secciones del menú y qué funcionalidades están disponibles para cada
@@ -335,7 +335,7 @@ reduce la fricción de mantener consistencia visual y facilita la colaboración.
 ### MSAL para autenticación institucional
 
 La integración con Azure AD mediante MSAL responde al requerimiento
-institucional de la ANE de utilizar las credenciales corporativas existentes.
+institucional de la regulatory body de utilizar las credenciales corporativas existentes.
 MSAL maneja los flujos OAuth 2.0 / OIDC, la renovación silenciosa de tokens
 y la persistencia de sesión, reduciendo la complejidad de implementación en
 el frontend.
@@ -493,7 +493,7 @@ percepción de velocidad en el primer acceso.
 
 | Campo | Valor |
 |---|---|
-| Nombre del software | ANE Frontend |
+| Nombre del software | regulatory body Frontend |
 | Rama | main |
 | Función en el sistema | Interfaz web para operación y administración de la plataforma de monitoreo espectral |
 | Entradas | Interacciones de la persona usuaria, datos en tiempo real por WebSocket, respuestas de API REST |

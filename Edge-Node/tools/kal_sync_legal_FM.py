@@ -82,7 +82,7 @@ class FmCalibrator:
             log.info(f"BD cargada. {len(freqs)} frecuencias legales encontradas en {radius_m}m.")
             return freqs
         except Exception as e:
-            log.error(f"Error cargando BD ANE: {e}", exc_info=True)
+            log.error(f"Error cargando BD regulatory body: {e}", exc_info=True)
             return []
 
     async def acquire_psd(self, sdr_config: ServerRealtimeConfig) -> DspPayload:

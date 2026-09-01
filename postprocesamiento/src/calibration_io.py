@@ -108,7 +108,7 @@ def _read_licencias_csv(path: str) -> pd.DataFrame:
     - soporta separador ';' o ',' (algunas bases vienen en uno u otro)
     - preferimos engine C (más estable en archivos grandes)
     """
-    # 1) intentar con ';' (muy común en exportaciones ANE)
+    # 1) intentar con ';' (muy común en exportaciones regulatory body)
     try:
         df = pd.read_csv(path, sep=";", encoding="utf-8", on_bad_lines="skip", low_memory=False)
     except Exception:

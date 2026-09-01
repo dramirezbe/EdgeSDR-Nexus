@@ -6,10 +6,10 @@ const options = {
   definition: {
     openapi: '3.0.0',
     info: {
-      title: 'ANE Realtime Monitoring API',
+      title: 'regulatory body Realtime Monitoring API',
       version: '1.0.0',
       description: `
-        API completa para el sistema de monitoreo en tiempo real de señales de radio de la ANE.
+        API completa para el sistema de monitoreo en tiempo real de señales de radio de la regulatory body.
         
         ## Arquitectura
         - **Backend**: Node.js + Express + TypeScript
@@ -45,7 +45,7 @@ const options = {
         - \`GET /api/sensor/:mac/configuration\` - Obtener configuración activa
       `,
       contact: {
-        name: 'ANE - Agencia Nacional del Espectro',
+        name: 'regulatory body - regulatory body',
         url: 'https://ane.gov.co'
       }
     },
@@ -266,7 +266,7 @@ export function setupSwagger(app: Express) {
   // Swagger UI
   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec, {
     customCss: '.swagger-ui .topbar { display: none }',
-    customSiteTitle: 'ANE API Documentation'
+    customSiteTitle: 'regulatory body API Documentation'
   }));
 
   // JSON endpoint

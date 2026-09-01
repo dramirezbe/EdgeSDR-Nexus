@@ -1,6 +1,6 @@
-# Contexto del Backend — Plataforma ANE
+# Contexto del Backend — Plataforma regulatory body
 
-Este documento consolida el contexto del backend de la Plataforma ANE como
+Este documento consolida el contexto del backend de la Plataforma regulatory body como
 insumo para redactar el capítulo "Plataforma web en la nube" del informe final.
 Toda la información se presenta desde una perspectiva metodológica, de
 arquitectura y de decisiones de diseño, sin referencias a archivos de código ni
@@ -270,7 +270,7 @@ rechazados.
 
 ## Despliegue en la nube
 
-La plataforma se despliega en un servidor institucional privado de la ANE,
+La plataforma se despliega en un servidor institucional privado de la regulatory body,
 sin acceso público a Internet. El acceso se realiza a través de la red interna
 de la entidad.
 
@@ -490,7 +490,7 @@ segundos.
 
 | Campo | Valor |
 |---|---|
-| Nombre del software | ANE Backend |
+| Nombre del software | regulatory body Backend |
 | Rama | main |
 | Función en el sistema | Coordinación central: API REST, WebSocket, persistencia, gestión de campañas, alertas y reportes |
 | Entradas | Solicitudes HTTP (frontend y sensores), datos de espectro, GPS, estado y audio desde sensores |

@@ -52,7 +52,7 @@ const Login: React.FC<LoginProps> = ({ showLegacyForm = false }) => {
     <div className="login-wrapper">
       <div className="login-box">
         <div className="logo-container">
-          <img src={logoANE} alt="ANE Colombia" className="logo-img" />
+          <img src={logoANE} alt="regulatory body Colombia" className="logo-img" />
         </div>
         
         <h1 className="login-title">Plataforma de sensado espectral</h1>

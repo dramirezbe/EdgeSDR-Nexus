@@ -1,4 +1,4 @@
-# Documentación API ANE - Swagger
+# Documentación API regulatory body - Swagger
 
 ## Acceso a la Documentación
 

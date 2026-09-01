@@ -1,8 +1,8 @@
 # PROJECT CONCEPTUAL SUMMARY
 
-## SDR Spectrum Monitoring Sensor — ANE (Colombia)
+## SDR Spectrum Monitoring Sensor — regulatory body (Colombia)
 
-Hybrid **C (data plane) + Python 3.11+ (control plane)** sensor for a HackRF One on a Raspberry Pi 5, managed by the Colombian Spectrum Agency (ANE).
+Hybrid **C (data plane) + Python 3.11+ (control plane)** sensor for a HackRF One on a Raspberry Pi 5, managed by the Colombian Spectrum Agency (regulatory body).
 
 ---
 
@@ -21,7 +21,7 @@ A low-cost, edge-deployed RF monitoring sensor that:
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        CLOUD (ANE Server)                       │
+│                        CLOUD (regulatory body Server)                       │
 │   REST API: GET /realtime, GET /campaigns                       │
 │   REST API: POST /data, POST /status, POST /gps                 │
 │   WebSocket: /ws/signal/{SENSOR_ID} (WebRTC signaling)          │

@@ -28,7 +28,7 @@ export function Sidebar({ activeTab, onTabChange, user, onLogout, isAdmin }: Sid
     <div className="w-48 bg-white border-r border-gray-200 flex flex-col h-screen">
       <div className="p-4 border-b border-gray-200">
         <div className="flex items-center justify-center">
-          <img src={logo} alt="ANE Logo" className="w-32 h-auto" />
+          <img src={logo} alt="regulatory body Logo" className="w-32 h-auto" />
         </div>
       </div>
 

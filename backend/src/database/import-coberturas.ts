@@ -40,7 +40,7 @@ async function createCoberturasTable() {
 }
 
 async function loadCSVData() {
-  const csvPath = join('C:', 'ANE REALTIME', 'consolidado.csv');
+  const csvPath = join('C:', 'regulatory body REALTIME', 'consolidado.csv');
   console.log(`📂 Leyendo archivo: ${csvPath}`);
   
   const fileContent = readFileSync(csvPath, 'utf-8');

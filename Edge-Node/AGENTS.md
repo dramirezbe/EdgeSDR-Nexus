@@ -2,7 +2,7 @@
 
 ## Project identity
 
-Hybrid **C (data plane) + Python 3.11+ (control plane)** sensor for a HackRF One on a Raspberry Pi 5, managed by the Colombian Spectrum Agency (ANE).
+Hybrid **C (data plane) + Python 3.11+ (control plane)** sensor for a HackRF One on a Raspberry Pi 5, managed by the Colombian Spectrum Agency (regulatory body).
 
 ## Build & verify
 

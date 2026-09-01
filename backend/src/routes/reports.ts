@@ -221,7 +221,7 @@ router.post('/compliance/:campaignId', async (req: Request, res: Response) => {
       return res.status(404).json({ error: 'No GPS data found for sensor (manual or automatic)' });
     }
 
-    // 3. Consultar la API de geolocalización ANE
+    // 3. Consultar la API de geolocalización regulatory body
     let location: GeolocationResult;
     try {
       const geoResponse = await axios.post('http://172.23.80.220:4155/localizar', {
@@ -239,7 +239,7 @@ router.post('/compliance/:campaignId', async (req: Request, res: Response) => {
       console.error('Error calling geolocation API:', geoError);
       return res.status(503).json({ 
         error: 'Geolocation service unavailable',
-        details: 'No se pudo conectar con el servicio de geolocalización ANE'
+        details: 'No se pudo conectar con el servicio de geolocalización regulatory body'
       });
     }
 
@@ -546,7 +546,7 @@ router.post('/compliance/:campaignId', async (req: Request, res: Response) => {
     
     const report = {
       reporte_automatico: true,
-      plataforma: 'Plataforma Convenio 217 de 2025 - ANE',
+      plataforma: 'Plataforma Convenio 217 de 2025 - regulatory body',
       fecha_generacion: new Date().toISOString(),
       fecha_medicion: primeraFecha,
       
@@ -588,7 +588,7 @@ router.post('/compliance/:campaignId', async (req: Request, res: Response) => {
         tolerancia_bw_khz: delta_bw_khz,
         correccion_aplicada: false,
         metodo_deteccion: 'Detección automática con umbrales adaptativos (NumPy/SciPy)',
-        algoritmo: 'Análisis espectral avanzado con comparación de licencias ANE'
+        algoritmo: 'Análisis espectral avanzado con comparación de licencias regulatory body'
       },
       
       estadisticas: {

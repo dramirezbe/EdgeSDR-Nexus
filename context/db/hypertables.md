@@ -1,4 +1,4 @@
-# ANE DB TimescaleDB Hypertables
+# regulatory body DB TimescaleDB Hypertables
 
 Captured source:
 

@@ -20,7 +20,7 @@ const AudioPage: React.FC = () => {
             Monitoreo de Audio en Tiempo Real
           </h1>
           <p className="text-gray-600">
-            Sistema ANE - Agencia Nacional del Espectro
+            Sistema regulatory body - regulatory body
           </p>
         </div>
 

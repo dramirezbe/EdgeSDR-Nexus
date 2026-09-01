@@ -1,6 +1,6 @@
 # EdgeSDR-Nexus
 
-Spectral monitoring platform for Colombia's National Spectrum Agency (ANE). Operates RF sensors, receives measurements, analyzes them, and produces monitoring, campaign, and compliance reports.
+Spectral monitoring platform for Colombia's regulatory body (regulatory body). Operates RF sensors, receives measurements, analyzes them, and produces monitoring, campaign, and compliance reports.
 
 ## Quick Start
 

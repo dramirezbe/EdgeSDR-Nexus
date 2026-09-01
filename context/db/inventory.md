@@ -1,4 +1,4 @@
-# ANE DB Object Inventory
+# regulatory body DB Object Inventory
 
 Initial object list copied from the old database and refined with the later `\dt` capture.
 

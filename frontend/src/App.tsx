@@ -601,7 +601,7 @@ function AuthenticatedApp({ user, logout, isAdmin }: { user: any, logout: () => 
           <div className="relative z-10 flex-1 overflow-auto">
             <div className="max-w-7xl mx-auto p-6">
             <div className="mb-6 text-center">
-              <h1 className="text-3xl font-bold text-gray-900">Bienvenido a ANE | Plataforma de Sensado Espectral</h1>
+              <h1 className="text-3xl font-bold text-gray-900">Bienvenido a regulatory body | Plataforma de Sensado Espectral</h1>
             </div>
             
             {/* Estadísticas Generales */}
@@ -1038,12 +1038,12 @@ function AuthenticatedApp({ user, logout, isAdmin }: { user: any, logout: () => 
                   </div>
                   <h2 className="text-2xl font-semibold text-gray-900">Manual de Software</h2>
                 </div>
-                <p className="text-gray-600 mb-4">Documentación completa del sistema ANE.</p>
+                <p className="text-gray-600 mb-4">Documentación completa del sistema regulatory body.</p>
                 
                 <div className="space-y-3">
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-orange-300 transition-colors cursor-pointer">
                     <h3 className="font-semibold text-gray-900 mb-1">Guía de Inicio Rápido</h3>
-                    <p className="text-sm text-gray-600">Primeros pasos con el sistema ANE</p>
+                    <p className="text-sm text-gray-600">Primeros pasos con el sistema regulatory body</p>
                   </div>
                   <div className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:border-orange-300 transition-colors cursor-pointer">
                     <h3 className="font-semibold text-gray-900 mb-1">Gestión de Dispositivos</h3>
@@ -1121,7 +1121,7 @@ function AuthenticatedApp({ user, logout, isAdmin }: { user: any, logout: () => 
                 </div>
                 <div className="text-center">
                   <p className="text-sm font-medium text-gray-900">Versión del Sistema</p>
-                  <p className="text-sm text-gray-600 mt-1">ANE v1.0.0</p>
+                  <p className="text-sm text-gray-600 mt-1">regulatory body v1.0.0</p>
                 </div>
               </div>
             </div>

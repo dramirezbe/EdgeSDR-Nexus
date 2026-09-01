@@ -270,7 +270,7 @@ def health():
 @app.post("/analyze")
 def analyze():
     """
-    Recomendado (modo ANE/sensores):
+    Recomendado (modo regulatory body/sensores):
     {
       "frame": { ...JSON COMPLETO DE MEDICIÓN... },
       "cumplimiento": 1,

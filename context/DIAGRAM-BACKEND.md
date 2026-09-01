@@ -1,6 +1,6 @@
 # Flujo general del backend
 
-Este documento resume, en lenguaje simple, que hace el backend de la plataforma ANE. La idea no es explicar el codigo, sino mostrar como el backend hace posible que la medicion, el monitoreo y los reportes funcionen de punta a punta.
+Este documento resume, en lenguaje simple, que hace el backend de la plataforma regulatory body. La idea no es explicar el codigo, sino mostrar como el backend hace posible que la medicion, el monitoreo y los reportes funcionen de punta a punta.
 
 ## Bloques principales
 
