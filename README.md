@@ -1,28 +1,52 @@
-# Plataforma ANE
+# EdgeSDR-Nexus
 
-Este repositorio agrupa la plataforma de sensado espectral de la ANE. En terminos simples, la plataforma permite operar sensores RF, recibir mediciones, analizarlas y convertirlas en informacion util para monitoreo, campañas y reportes de cumplimiento.
+Spectral monitoring platform for Colombia's National Spectrum Agency (ANE). Operates RF sensors, receives measurements, analyzes them, and produces monitoring, campaign, and compliance reports.
 
-La vista general es corta a proposito. Para profundizar en cada parte, hay diagramas especificos en `frontend/`, `backend/` y `postprocesamiento/`.
+## Quick Start
 
-## Diagrama general: de la medicion al reporte
+1. **Understand the codebase first** — read `scaffold/INDEX.md` (the full map)
+2. **For AI agents** — see `AGENTS.md` for mandatory exploration order
+3. **Platform overview** — see `README_PLATFORM.md`
 
-![Diagrama general: de la medicion al reporte](images/GENERAL-diagram.jpeg)
+## Architecture
 
-## Como leer este mapa
+| Section | Purpose | Docs |
+|---------|---------|------|
+| frontend | React/Vite TypeScript SPA — operator dashboard | [scaffold/frontend/main_markdown.md](scaffold/frontend/main_markdown.md) |
+| backend | Node.js/TypeScript REST API — sensor ingestion, CRUD, campaigns, reports | [scaffold/backend/main_markdown.md](scaffold/backend/main_markdown.md) |
+| postprocesamiento | Python Flask microservice — spectral analysis, compliance | [scaffold/postprocesamiento/main_markdown.md](scaffold/postprocesamiento/main_markdown.md) |
+| edge | Raspberry Pi 5 sensor — C99 RF engine + Python orchestrator | [scaffold/edge/main_markdown.md](scaffold/edge/main_markdown.md) |
+| infra | Docker Compose, nginx, deployment scripts | [scaffold/infra/main_markdown.md](scaffold/infra/main_markdown.md) |
 
-La persona usuaria trabaja desde el `frontend/`: ve mapas, estados, monitoreo en vivo, campañas, alertas y reportes.
+Full scaffold index: [scaffold/INDEX.md](scaffold/INDEX.md)
 
-El `backend/` coordina todo lo que ocurre detras: autentica usuarios, administra sensores y campañas, recibe datos de campo, guarda informacion, avisa cambios en tiempo real y solicita analisis cuando se necesita un reporte.
+## Data Flow
 
-El `postprocesamiento/` interpreta mediciones de espectro. Detecta emisiones, mide sus parametros y, cuando hay informacion normativa disponible, indica si esas emisiones cumplen, estan fuera de parametros o no tienen licencia asociada.
+```
+Internet/Intranet :80
+    |
+    v
+[frontend] (nginx:alpine, port 80)
+    |--- /api/*  --->  [backend]  (Node.js/Express, port 3000)
+    |--- /ws     --->  [backend]  (WebSocket upgrade)
+    |--- /        --->  (static SPA assets)
+                            |
+                            |--- HTTP ---> [postprocesamiento] (Flask/gunicorn, port 8000)
+                            |--- TCP ----> [PostgreSQL] (external, 172.23.90.25:5432)
 
-## Lectura en una frase
+[edge sensors] (Raspberry Pi 5, remote)
+    |--- POST status/gps/data --->  [backend]
+    |--- GET realtime/campaigns  <---  [backend]
+    |--- Opus audio ---> [backend WebSocket] ---> [frontend WebRTC]
+```
 
-La plataforma permite que una persona configure mediciones desde la web, que los sensores midan el espectro, que el backend organice y guarde los datos, y que el modulo Python convierta esas mediciones en resultados de cumplimiento.
+## Build & Run
 
-## Donde profundizar
+```bash
+# Docker (recommended)
+docker-compose up -d
 
-- Flujo del frontend: [frontend/DIAGRAM.md](frontend/DIAGRAM.md)
-- Flujo del backend: [backend/DIAGRAM.md](backend/DIAGRAM.md)
-- Flujo del postprocesamiento: [postprocesamiento/DIAGRAM.md](postprocesamiento/DIAGRAM.md)
-- Documentacion del backend: [backend/README.md](backend/README.md)
+# Edge node (on Raspberry Pi 5)
+cd Edge-Node
+sudo ./install.sh
+```
