@@ -1,0 +1,283 @@
+{
+  "generated_at": "2026-08-31T00:00:00Z",
+  "commit": "dc6c386",
+  "sections": [
+    {
+      "path": "scaffold/frontend/main_markdown.md",
+      "layer": 1,
+      "parent": "scaffold/INDEX.md",
+      "children": [
+        "scaffold/frontend/auth/main_markdown.md",
+        "scaffold/frontend/monitoring/main_markdown.md",
+        "scaffold/frontend/campaigns/main_markdown.md",
+        "scaffold/frontend/network/main_markdown.md",
+        "scaffold/frontend/admin/main_markdown.md",
+        "scaffold/frontend/audio/main_markdown.md",
+        "scaffold/frontend/core/main_markdown.md"
+      ],
+      "purpose": "React/Vite TypeScript SPA operator dashboard",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/frontend/auth/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/frontend/main_markdown.md",
+      "children": [],
+      "purpose": "Azure AD SSO + legacy auth, JWT, AuthContext",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/frontend/monitoring/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/frontend/main_markdown.md",
+      "children": [],
+      "purpose": "Real-time spectrum monitoring, configuration, visualization",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/frontend/campaigns/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/frontend/main_markdown.md",
+      "children": [],
+      "purpose": "Campaign lifecycle, data viewing, compliance reports",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/frontend/network/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/frontend/main_markdown.md",
+      "children": [],
+      "purpose": "Sensor network map visualization",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/frontend/admin/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/frontend/main_markdown.md",
+      "children": [],
+      "purpose": "Antenna, user, and system configuration management",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/frontend/audio/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/frontend/main_markdown.md",
+      "children": [],
+      "purpose": "WebRTC audio streaming for demodulated AM/FM",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/frontend/core/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/frontend/main_markdown.md",
+      "children": [],
+      "purpose": "App shell, entry point, routing, sidebar, API client",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/backend/main_markdown.md",
+      "layer": 1,
+      "parent": "scaffold/INDEX.md",
+      "children": [
+        "scaffold/backend/data-ingest/main_markdown.md",
+        "scaffold/backend/management-api/main_markdown.md",
+        "scaffold/backend/campaigns/main_markdown.md",
+        "scaffold/backend/reports/main_markdown.md",
+        "scaffold/backend/websocket/main_markdown.md",
+        "scaffold/backend/models/main_markdown.md"
+      ],
+      "purpose": "Node.js/TypeScript REST API server with PostgreSQL and WebSocket",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/backend/data-ingest/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/backend/main_markdown.md",
+      "children": [],
+      "purpose": "Sensor-to-server data ingestion: status, GPS, spectrum, config",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/backend/management-api/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/backend/main_markdown.md",
+      "children": [],
+      "purpose": "Frontend CRUD: sensors, antennas, users, auth, config",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/backend/campaigns/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/backend/main_markdown.md",
+      "children": [],
+      "purpose": "Campaign lifecycle, status transitions, NDJSON streaming",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/backend/reports/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/backend/main_markdown.md",
+      "children": [],
+      "purpose": "Compliance report generation via Python microservice",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/backend/websocket/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/backend/main_markdown.md",
+      "children": [],
+      "purpose": "Real-time WebSocket for data/status/GPS and audio streaming",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/backend/models/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/backend/main_markdown.md",
+      "children": [],
+      "purpose": "Data layer: TypeScript models, types, database migration",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/postprocesamiento/main_markdown.md",
+      "layer": 1,
+      "parent": "scaffold/INDEX.md",
+      "children": [
+        "scaffold/postprocesamiento/server/main_markdown.md",
+        "scaffold/postprocesamiento/cli/main_markdown.md",
+        "scaffold/postprocesamiento/core/main_markdown.md",
+        "scaffold/postprocesamiento/spectral/main_markdown.md",
+        "scaffold/postprocesamiento/calibration/main_markdown.md",
+        "scaffold/postprocesamiento/utils/main_markdown.md"
+      ],
+      "purpose": "Python Flask microservice for spectral analysis and compliance",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/postprocesamiento/server/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/postprocesamiento/main_markdown.md",
+      "children": [],
+      "purpose": "Flask HTTP server: /health, /analyze, /analyze_batch",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/postprocesamiento/cli/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/postprocesamiento/main_markdown.md",
+      "children": [],
+      "purpose": "Command-line interface for local spectral analysis",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/postprocesamiento/core/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/postprocesamiento/main_markdown.md",
+      "children": [],
+      "purpose": "Central orchestrator: mode routing, detection pipeline, compliance",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/postprocesamiento/spectral/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/postprocesamiento/main_markdown.md",
+      "children": [],
+      "purpose": "Signal processing: peak detection, bandwidth, noise floor, TDT",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/postprocesamiento/calibration/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/postprocesamiento/main_markdown.md",
+      "children": [],
+      "purpose": "License CSV I/O and compliance matching",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/postprocesamiento/utils/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/postprocesamiento/main_markdown.md",
+      "children": [],
+      "purpose": "DSP utilities: smoothing, noise floor, channel detection, regions",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/edge/main_markdown.md",
+      "layer": 1,
+      "parent": "scaffold/INDEX.md",
+      "children": [
+        "scaffold/edge/rf-engine/main_markdown.md",
+        "scaffold/edge/python-services/main_markdown.md",
+        "scaffold/edge/utils/main_markdown.md",
+        "scaffold/edge/build-deploy/main_markdown.md",
+        "scaffold/edge/gps-lte/main_markdown.md",
+        "scaffold/edge/context/main_markdown.md"
+      ],
+      "purpose": "Raspberry Pi 5 sensor: C99 RF engine + Python orchestrator",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/edge/rf-engine/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/edge/main_markdown.md",
+      "children": [],
+      "purpose": "C99 real-time data plane: HackRF, DSP, PSD, demodulation, Opus",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/edge/python-services/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/edge/main_markdown.md",
+      "children": [],
+      "purpose": "Python control plane: orchestrator, campaigns, WebRTC, status",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/edge/utils/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/edge/main_markdown.md",
+      "children": [],
+      "purpose": "Python utilities: IPC, shared memory, DC spike, DSP primitives",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/edge/build-deploy/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/edge/main_markdown.md",
+      "children": [],
+      "purpose": "Build system and deployment: CMake, install.sh, systemd units",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/edge/gps-lte/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/edge/main_markdown.md",
+      "children": [],
+      "purpose": "C99 GPS and LTE modules for sensor positioning",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/edge/context/main_markdown.md",
+      "layer": 3,
+      "parent": "scaffold/edge/main_markdown.md",
+      "children": [],
+      "purpose": "Architecture documentation and reference materials",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/infra/main_markdown.md",
+      "layer": 1,
+      "parent": "scaffold/INDEX.md",
+      "children": [],
+      "purpose": "Docker Compose, nginx, deployment and backup scripts",
+      "last_audited_commit": "dc6c386"
+    },
+    {
+      "path": "scaffold/INDEX.md",
+      "layer": 0,
+      "parent": "",
+      "children": [],
+      "purpose": "Master index of all scaffold sections with cross-references",
+      "last_audited_commit": "dc6c386"
+    }
+  ]
+}
