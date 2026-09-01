@@ -1,0 +1,154 @@
+# ═══════════════════════════════════════════════════════════════
+# INSTALACIÓN MANUAL ANE REALTIME - COMANDOS PASO A PASO
+# ═══════════════════════════════════════════════════════════════
+# Copia y pega estos comandos UNO POR UNO en el servidor Debian
+# ═══════════════════════════════════════════════════════════════
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PASO 1: INSTALAR DOCKER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Actualizar sistema
+apt-get update
+
+# Instalar dependencias
+apt-get install -y ca-certificates curl gnupg
+
+# Agregar clave GPG de Docker
+install -m 0755 -d /etc/apt/keyrings
+curl -fsSL https://download.docker.com/linux/debian/gpg | gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+chmod a+r /etc/apt/keyrings/docker.gpg
+
+# Agregar repositorio de Docker
+echo \
+  "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/debian \
+  $(. /etc/os-release && echo "$VERSION_CODENAME") stable" | \
+  tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+# Actualizar lista de paquetes
+apt-get update
+
+# Instalar Docker
+apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+
+# Habilitar e iniciar Docker
+systemctl enable docker
+systemctl start docker
+
+# Verificar instalación
+docker --version
+docker compose version
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PASO 2: IR AL DIRECTORIO Y EXTRAER ARCHIVOS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cd /opt/ane-realtime
+
+# Ver archivos disponibles
+ls -la
+
+# Extraer el archivo (reemplaza XXXXXX con la fecha de tu archivo)
+tar -xzf ane-realtime-*.tar.gz
+
+# Verificar que se extrajeron
+ls -la
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PASO 3: CONFIGURAR VARIABLES DE ENTORNO
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+cat > .env << 'EOF'
+NODE_ENV=production
+PORT=3000
+DATABASE_PATH=/app/data/ane.db
+VITE_API_URL=http://rsm.ane.gov.co:1280/api
+VITE_WS_URL=ws://rsm.ane.gov.co:1280/ws
+EOF
+
+# Verificar que se creó
+cat .env
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PASO 4: CREAR DIRECTORIOS NECESARIOS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+mkdir -p backend/data backend/logs
+
+# Verificar
+ls -la backend/
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PASO 5: CONSTRUIR IMÁGENES DOCKER
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ⚠️  ESTO TOMA VARIOS MINUTOS - SÉ PACIENTE
+
+docker compose build --no-cache
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PASO 6: LEVANTAR SERVICIOS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+docker compose up -d
+
+# Esperar unos segundos
+sleep 10
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# PASO 7: VERIFICAR QUE TODO FUNCIONA
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Ver estado de contenedores
+docker compose ps
+
+# Ver logs
+docker compose logs --tail=50
+
+# Probar servicios localmente
+curl http://localhost/
+curl http://localhost:3000/
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# COMANDOS ÚTILES PARA DESPUÉS
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+# Ver logs en tiempo real
+docker compose logs -f
+
+# Ver solo logs del backend
+docker compose logs -f backend
+
+# Ver solo logs del frontend
+docker compose logs -f frontend
+
+# Reiniciar servicios
+docker compose restart
+
+# Detener servicios
+docker compose down
+
+# Iniciar servicios
+docker compose up -d
+
+# Ver uso de recursos
+docker stats
+
+# Entrar a un contenedor
+docker compose exec backend sh
+docker compose exec frontend sh
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# SI ALGO SALE MAL - REINICIAR DESDE CERO
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+docker compose down
+docker compose build --no-cache
+docker compose up -d
+docker compose logs -f
+
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# ✅ LISTO - LA APLICACIÓN DEBE ESTAR FUNCIONANDO EN:
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+# Frontend: http://rsm.ane.gov.co:1280
+# Backend:  http://rsm.ane.gov.co:1280/api
+# ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

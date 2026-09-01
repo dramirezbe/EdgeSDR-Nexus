@@ -1,0 +1,31 @@
+//GET realtime
+{
+    /// Central spectral analysis frequency (Hz).
+    "center_freq_hz": 98000000,
+
+    // Spectral resolution or RBW (Resolution Bandwidth) in Hz.
+    "rbw_hz": 100000,
+
+    "sample_rate_hz": 20000000,
+
+    //-----default stats--------
+    "window": "hann",
+    //float
+    "overlap": 0.5,
+    //int
+    
+    "lna_gain": 0,
+    "vga_gain": 0,
+    //bool
+    "antenna_amp": false,
+    "antenna_port": 1,
+    //float seconds between RF requests/PSD processing (>= 0)
+    "cooldown_request": 1.0,
+
+    // Can be "fm", "am", or null for plain PSD mode.
+    "demodulation": null,
+
+    // Optional absolute RF filter limits in Hz.
+    // Use null when no filtering is required.
+    "filter": null
+}

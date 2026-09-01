@@ -1,0 +1,23 @@
+version: 2
+
+sphinx:
+  # Path to your Sphinx configuration file.
+  configuration: docs/conf.py
+
+build:
+  os: ubuntu-24.04
+  tools:
+    python: "3.11"
+  apt_packages:
+    - doxygen  # This allows the subprocess.call in conf.py to work
+  jobs:
+    pre_build:
+      - doxygen Doxyfile
+
+python:
+  install:
+    - requirements: docs/requirements.txt
+
+formats:
+  - pdf
+  - htmlzip

@@ -1,0 +1,85 @@
+services:
+  # Backend - API y WebSocket con PostgreSQL
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ane-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      # PostgreSQL Configuration
+      - DB_TYPE=postgresql
+      - DB_HOST=172.23.90.25
+      - DB_PORT=5432
+      - DB_NAME=ane_db
+      - DB_USER=ane_user
+      - DB_PASSWORD=ANE_Secure_2025!_Unal
+      # Python Analysis Service
+      - PYTHON_SERVICE_URL=http://python-analysis:8000
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/logs:/app/logs
+    networks:
+      - ane-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      python-analysis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Microservicio Python - Análisis espectral
+  python-analysis:
+    build:
+      context: ./postprocesamiento
+      dockerfile: Dockerfile
+    container_name: ane-python-analysis
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ANE_LIC_CSV=/opt/ane-realtime/data/licencias.csv
+    networks:
+      - ane-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  # Frontend - Interfaz web
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        # Usar rutas relativas - nginx hace el proxy
+        - VITE_API_URL=${VITE_API_URL:-/api}
+        - VITE_WS_URL=${VITE_WS_URL:-/ws}
+    container_name: ane-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - ane-network
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  ane-network:
+    driver: bridge
