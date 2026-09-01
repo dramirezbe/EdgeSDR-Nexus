@@ -1,5 +1,5 @@
 # ═══════════════════════════════════════════════════════════════
-# INSTALACIÓN MANUAL ANE REALTIME - COMANDOS PASO A PASO
+# INSTALACIÓN MANUAL REALTIME - COMANDOS PASO A PASO
 # ═══════════════════════════════════════════════════════════════
 # Copia y pega estos comandos UNO POR UNO en el servidor Debian
 # ═══════════════════════════════════════════════════════════════

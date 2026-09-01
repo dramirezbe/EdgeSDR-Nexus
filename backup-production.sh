@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ################################################################################
-# Backup Script for ANE Production Server
+# Backup Script for Production Server
 # Creates compressed backups of frontend, backend, and postprocesamiento
 # Then removes the original directories
 ################################################################################
