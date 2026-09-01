@@ -1,4 +1,4 @@
-# RF Engine — Layer 3
+# RF Engine — Layer 2
 
 > Parent: [../main.md](../main.md)
 > Last audited: 2026-08-31 @ commit dc6c386

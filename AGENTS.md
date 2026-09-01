@@ -10,7 +10,7 @@ Before touching any source code, read the scaffold:
 
 1. `scaffold/INDEX.md` — full map of all sections and sub-sections
 2. `scaffold/<section>/main.md` — Layer 1 overview of the section you need
-3. `scaffold/<section>/<sub>/main.md` — Layer 3 detail of the specific sub-section
+3. `scaffold/<section>/<sub>/main.md` — Layer 2 detail of the specific sub-section
 
 **Why:** The scaffold was built to let you understand structure without reading every file. It contains purpose, tech stack, file structure, entry points, key interactions, common tasks, and open questions for every section.
 

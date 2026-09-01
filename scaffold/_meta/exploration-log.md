@@ -108,7 +108,7 @@ frontend/
 4. CampaignDataViewer.tsx is 1759 lines — largest component
 5. No testing framework configured (no jest, vitest, or test files)
 
-### Layer 3 Proposals
+### Layer 2 Proposals
 The frontend is large (~13,000+ lines) and heterogeneous. Proposed sub-sections:
 - **auth** — Login, AzureCallback, AuthContext, authConfig
 - **monitoring** — ConfigurationPanel, AnalysisPanel, SpectrumChart, Waterfall, useSpectrumData
@@ -207,7 +207,7 @@ backend/
 7. ~20 ad-hoc SQL scripts at root level
 8. Dynamic imports in campaign.ts suggest circular dependency issues
 
-### Layer 3 Proposals
+### Layer 2 Proposals
 - **data-ingest** — sensor.ts (POST endpoints), SensorDataModel
 - **management-api** — management.ts, auth.ts, config.ts
 - **campaigns** — campaign.ts + campaign parts of sensor.ts
@@ -277,7 +277,7 @@ JSON payload -> unpack_input -> route_mode -> frame_from_payload -> apply_gain_c
 6. No version pinning in requirements.txt
 7. No `.dockerignore` — test files baked into production image
 
-### Layer 3 Proposals
+### Layer 2 Proposals
 - **server** — Flask app + routes
 - **cli** — main.py
 - **core** — processor.py orchestrator
@@ -403,7 +403,7 @@ Edge-Node/
 4. Build artifacts (`rf_app`, `ltegps_app`) placed in repo root then gitignored
 5. `benchmarking.py` is standalone profiling, not used in production
 
-### Layer 3 Proposals
+### Layer 2 Proposals
 This section is large and heterogeneous. Proposed sub-sections:
 - **rf-engine** — rf/ directory (C99 DSP, SDR HAL, ring buffer, demodulators, Opus TX)
 - **python-services** — orchestrator, campaign_runner, status, retry_queue, server_webrtc, functions, cfg

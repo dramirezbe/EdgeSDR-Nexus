@@ -47,7 +47,7 @@ Each Layer 1 file contains:
 
 **When to read it:** Before touching any file in that service. It gives you the context to understand what you're looking at.
 
-### Layer 3 — Sub-Section Details (`scaffold/<section>/<sub>/main.md`)
+### Layer 2 — Sub-Section Details (`scaffold/<section>/<sub>/main.md`)
 
 **Purpose:** Deep dive into a specific functional area within a service.
 
@@ -60,7 +60,7 @@ For example, the frontend has 7 sub-sections:
 - `audio` — WebRTC audio streaming
 - `core` — App shell, routing, API client
 
-Each Layer 3 file follows the same template as Layer 1 but zoomed into a specific concern. It tells you exactly which files implement that feature, how they interact, and what to watch out for.
+Each Layer 2 file follows the same template as Layer 1 but zoomed into a specific concern. It tells you exactly which files implement that feature, how they interact, and what to watch out for.
 
 **When to read it:** When you're about to modify a specific feature. It tells you which files to touch and which to leave alone.
 
@@ -94,7 +94,7 @@ Source code (only now)               # "Let me read the actual implementation"
 
 The manifest is a JSON file that lets code (or AI agents) programmatically navigate the scaffold. It lists every section with:
 - `path` — file location
-- `layer` — 0, 1, or 3
+- `layer` — 0, 1, or 2
 - `parent` — the section above it in the hierarchy
 - `children` — sub-sections below it
 - `purpose` — one-line description
@@ -126,9 +126,9 @@ This is the raw research that went into building the scaffold. It contains:
 - Entry point analysis
 - Cross-section interaction maps
 - Ambiguities and dead code discoveries
-- Layer 3 sub-section proposals
+- Layer 2 sub-section proposals
 
-**When to read it:** When you need more detail than Layer 1/3 provides. It has the "why" behind the structure decisions.
+**When to read it:** When you need more detail than Layer 1/2 provides. It has the "why" behind the structure decisions.
 
 ---
 

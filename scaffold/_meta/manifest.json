@@ -20,7 +20,7 @@
     },
     {
       "path": "scaffold/frontend/auth/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Azure AD SSO + legacy auth, JWT, AuthContext",
@@ -28,7 +28,7 @@
     },
     {
       "path": "scaffold/frontend/monitoring/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Real-time spectrum monitoring, configuration, visualization",
@@ -36,7 +36,7 @@
     },
     {
       "path": "scaffold/frontend/campaigns/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Campaign lifecycle, data viewing, compliance reports",
@@ -44,7 +44,7 @@
     },
     {
       "path": "scaffold/frontend/network/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Sensor network map visualization",
@@ -52,7 +52,7 @@
     },
     {
       "path": "scaffold/frontend/admin/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Antenna, user, and system configuration management",
@@ -60,7 +60,7 @@
     },
     {
       "path": "scaffold/frontend/audio/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "WebRTC audio streaming for demodulated AM/FM",
@@ -68,7 +68,7 @@
     },
     {
       "path": "scaffold/frontend/core/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "App shell, entry point, routing, sidebar, API client",
@@ -91,7 +91,7 @@
     },
     {
       "path": "scaffold/backend/data-ingest/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Sensor-to-server data ingestion: status, GPS, spectrum, config",
@@ -99,7 +99,7 @@
     },
     {
       "path": "scaffold/backend/management-api/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Frontend CRUD: sensors, antennas, users, auth, config",
@@ -107,7 +107,7 @@
     },
     {
       "path": "scaffold/backend/campaigns/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Campaign lifecycle, status transitions, NDJSON streaming",
@@ -115,7 +115,7 @@
     },
     {
       "path": "scaffold/backend/reports/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Compliance report generation via Python microservice",
@@ -123,7 +123,7 @@
     },
     {
       "path": "scaffold/backend/websocket/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Real-time WebSocket for data/status/GPS and audio streaming",
@@ -131,7 +131,7 @@
     },
     {
       "path": "scaffold/backend/models/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Data layer: TypeScript models, types, database migration",
@@ -154,7 +154,7 @@
     },
     {
       "path": "scaffold/postprocesamiento/server/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Flask HTTP server: /health, /analyze, /analyze_batch",
@@ -162,7 +162,7 @@
     },
     {
       "path": "scaffold/postprocesamiento/cli/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Command-line interface for local spectral analysis",
@@ -170,7 +170,7 @@
     },
     {
       "path": "scaffold/postprocesamiento/core/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Central orchestrator: mode routing, detection pipeline, compliance",
@@ -178,7 +178,7 @@
     },
     {
       "path": "scaffold/postprocesamiento/spectral/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Signal processing: peak detection, bandwidth, noise floor, TDT",
@@ -186,7 +186,7 @@
     },
     {
       "path": "scaffold/postprocesamiento/calibration/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "License CSV I/O and compliance matching",
@@ -194,7 +194,7 @@
     },
     {
       "path": "scaffold/postprocesamiento/utils/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "DSP utilities: smoothing, noise floor, channel detection, regions",
@@ -217,7 +217,7 @@
     },
     {
       "path": "scaffold/edge/rf-engine/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "C99 real-time data plane: HackRF, DSP, PSD, demodulation, Opus",
@@ -225,7 +225,7 @@
     },
     {
       "path": "scaffold/edge/python-services/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Python control plane: orchestrator, campaigns, WebRTC, status",
@@ -233,7 +233,7 @@
     },
     {
       "path": "scaffold/edge/utils/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Python utilities: IPC, shared memory, DC spike, DSP primitives",
@@ -241,7 +241,7 @@
     },
     {
       "path": "scaffold/edge/build-deploy/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Build system and deployment: CMake, install.sh, systemd units",
@@ -249,7 +249,7 @@
     },
     {
       "path": "scaffold/edge/gps-lte/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "C99 GPS and LTE modules for sensor positioning",
@@ -257,7 +257,7 @@
     },
     {
       "path": "scaffold/edge/context/main.md",
-      "layer": 3,
+      "layer": 2,
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Architecture documentation and reference materials",

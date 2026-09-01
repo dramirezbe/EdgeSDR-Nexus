@@ -1,4 +1,4 @@
-# Data Ingest — Layer 3
+# Data Ingest — Layer 2
 
 > Parent: [../main.md](../main.md)
 > Last audited: 2026-08-31 @ commit dc6c386
