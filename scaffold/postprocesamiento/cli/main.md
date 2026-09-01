@@ -1,6 +1,6 @@
 # CLI — Layer 3
 
-> Parent: [../main_markdown.md](../main_markdown.md)
+> Parent: [../main.md](../main.md)
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose

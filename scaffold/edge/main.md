@@ -1,7 +1,7 @@
-# Edge Node — Layer 2
+# Edge Node — Layer 1
 
 > Parent: [../INDEX.md](../INDEX.md)
-> Children: [rf-engine](./rf-engine/main_markdown.md), [python-services](./python-services/main_markdown.md), [utils](./utils/main_markdown.md), [build-deploy](./build-deploy/main_markdown.md), [gps-lte](./gps-lte/main_markdown.md), [context](./context/main_markdown.md)
+> Children: [rf-engine](./rf-engine/main.md), [python-services](./python-services/main.md), [utils](./utils/main.md), [build-deploy](./build-deploy/main.md), [gps-lte](./gps-lte/main.md), [context](./context/main.md)
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose

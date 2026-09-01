@@ -9,8 +9,8 @@
 Before touching any source code, read the scaffold:
 
 1. `scaffold/INDEX.md` — full map of all sections and sub-sections
-2. `scaffold/<section>/main_markdown.md` — Layer 1 overview of the section you need
-3. `scaffold/<section>/<sub>/main_markdown.md` — Layer 3 detail of the specific sub-section
+2. `scaffold/<section>/main.md` — Layer 1 overview of the section you need
+3. `scaffold/<section>/<sub>/main.md` — Layer 3 detail of the specific sub-section
 
 **Why:** The scaffold was built to let you understand structure without reading every file. It contains purpose, tech stack, file structure, entry points, key interactions, common tasks, and open questions for every section.
 
@@ -31,11 +31,11 @@ If the scaffold says something and the code seems different, trust the code — 
 
 | Section | Purpose | Docs |
 |---------|---------|------|
-| frontend | React/Vite TypeScript SPA — operator dashboard | [scaffold/frontend/main_markdown.md](scaffold/frontend/main_markdown.md) |
-| backend | Node.js/TypeScript REST API — sensor ingestion, CRUD, campaigns, reports | [scaffold/backend/main_markdown.md](scaffold/backend/main_markdown.md) |
-| postprocesamiento | Python Flask microservice — spectral analysis, compliance | [scaffold/postprocesamiento/main_markdown.md](scaffold/postprocesamiento/main_markdown.md) |
-| edge | Raspberry Pi 5 sensor — C99 RF engine + Python orchestrator | [scaffold/edge/main_markdown.md](scaffold/edge/main_markdown.md) |
-| infra | Docker Compose, nginx, deployment scripts | [scaffold/infra/main_markdown.md](scaffold/infra/main_markdown.md) |
+| frontend | React/Vite TypeScript SPA — operator dashboard | [scaffold/frontend/main.md](scaffold/frontend/main.md) |
+| backend | Node.js/TypeScript REST API — sensor ingestion, CRUD, campaigns, reports | [scaffold/backend/main.md](scaffold/backend/main.md) |
+| postprocesamiento | Python Flask microservice — spectral analysis, compliance | [scaffold/postprocesamiento/main.md](scaffold/postprocesamiento/main.md) |
+| edge | Raspberry Pi 5 sensor — C99 RF engine + Python orchestrator | [scaffold/edge/main.md](scaffold/edge/main.md) |
+| infra | Docker Compose, nginx, deployment scripts | [scaffold/infra/main.md](scaffold/infra/main.md) |
 
 Full index: [scaffold/INDEX.md](scaffold/INDEX.md)
 

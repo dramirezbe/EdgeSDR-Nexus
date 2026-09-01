@@ -2,29 +2,29 @@
 
 > Last audited: 2026-08-31 @ commit dc6c386
 
-## Layer 1 — Section Map
+## Section Map
 
 | Section | Purpose | Docs |
 |---------|---------|------|
-| frontend | React/Vite TypeScript SPA — operator dashboard for monitoring, campaigns, alerts | [scaffold/frontend/main_markdown.md](scaffold/frontend/main_markdown.md) |
-| backend | Node.js/TypeScript API — sensor ingestion, CRUD, campaigns, reports, WebSocket | [scaffold/backend/main_markdown.md](scaffold/backend/main_markdown.md) |
-| postprocesamiento | Python Flask microservice — spectral analysis, emission detection, compliance | [scaffold/postprocesamiento/main_markdown.md](scaffold/postprocesamiento/main_markdown.md) |
-| edge | Raspberry Pi 5 sensor — C99 RF engine + Python orchestrator | [scaffold/edge/main_markdown.md](scaffold/edge/main_markdown.md) |
-| infra | Docker Compose, nginx, deployment scripts | [scaffold/infra/main_markdown.md](scaffold/infra/main_markdown.md) |
+| frontend | React/Vite TypeScript SPA — operator dashboard for monitoring, campaigns, alerts | [scaffold/frontend/main.md](scaffold/frontend/main.md) |
+| backend | Node.js/TypeScript API — sensor ingestion, CRUD, campaigns, reports, WebSocket | [scaffold/backend/main.md](scaffold/backend/main.md) |
+| postprocesamiento | Python Flask microservice — spectral analysis, emission detection, compliance | [scaffold/postprocesamiento/main.md](scaffold/postprocesamiento/main.md) |
+| edge | Raspberry Pi 5 sensor — C99 RF engine + Python orchestrator | [scaffold/edge/main.md](scaffold/edge/main.md) |
+| infra | Docker Compose, nginx, deployment scripts | [scaffold/infra/main.md](scaffold/infra/main.md) |
 
-## Layer 2 — Section Summaries
+## Section Summaries
 
 ### frontend
-7 sub-sections: [auth](scaffold/frontend/auth/main_markdown.md) | [monitoring](scaffold/frontend/monitoring/main_markdown.md) | [campaigns](scaffold/frontend/campaigns/main_markdown.md) | [network](scaffold/frontend/network/main_markdown.md) | [admin](scaffold/frontend/admin/main_markdown.md) | [audio](scaffold/frontend/audio/main_markdown.md) | [core](scaffold/frontend/core/main_markdown.md)
+7 sub-sections: [auth](scaffold/frontend/auth/main.md) | [monitoring](scaffold/frontend/monitoring/main.md) | [campaigns](scaffold/frontend/campaigns/main.md) | [network](scaffold/frontend/network/main.md) | [admin](scaffold/frontend/admin/main.md) | [audio](scaffold/frontend/audio/main.md) | [core](scaffold/frontend/core/main.md)
 
 ### backend
-6 sub-sections: [data-ingest](scaffold/backend/data-ingest/main_markdown.md) | [management-api](scaffold/backend/management-api/main_markdown.md) | [campaigns](scaffold/backend/campaigns/main_markdown.md) | [reports](scaffold/backend/reports/main_markdown.md) | [websocket](scaffold/backend/websocket/main_markdown.md) | [models](scaffold/backend/models/main_markdown.md)
+6 sub-sections: [data-ingest](scaffold/backend/data-ingest/main.md) | [management-api](scaffold/backend/management-api/main.md) | [campaigns](scaffold/backend/campaigns/main.md) | [reports](scaffold/backend/reports/main.md) | [websocket](scaffold/backend/websocket/main.md) | [models](scaffold/backend/models/main.md)
 
 ### postprocesamiento
-6 sub-sections: [server](scaffold/postprocesamiento/server/main_markdown.md) | [cli](scaffold/postprocesamiento/cli/main_markdown.md) | [core](scaffold/postprocesamiento/core/main_markdown.md) | [spectral](scaffold/postprocesamiento/spectral/main_markdown.md) | [calibration](scaffold/postprocesamiento/calibration/main_markdown.md) | [utils](scaffold/postprocesamiento/utils/main_markdown.md)
+6 sub-sections: [server](scaffold/postprocesamiento/server/main.md) | [cli](scaffold/postprocesamiento/cli/main.md) | [core](scaffold/postprocesamiento/core/main.md) | [spectral](scaffold/postprocesamiento/spectral/main.md) | [calibration](scaffold/postprocesamiento/calibration/main.md) | [utils](scaffold/postprocesamiento/utils/main.md)
 
 ### edge
-6 sub-sections: [rf-engine](scaffold/edge/rf-engine/main_markdown.md) | [python-services](scaffold/edge/python-services/main_markdown.md) | [utils](scaffold/edge/utils/main_markdown.md) | [build-deploy](scaffold/edge/build-deploy/main_markdown.md) | [gps-lte](scaffold/edge/gps-lte/main_markdown.md) | [context](scaffold/edge/context/main_markdown.md)
+6 sub-sections: [rf-engine](scaffold/edge/rf-engine/main.md) | [python-services](scaffold/edge/python-services/main.md) | [utils](scaffold/edge/utils/main.md) | [build-deploy](scaffold/edge/build-deploy/main.md) | [gps-lte](scaffold/edge/gps-lte/main.md) | [context](scaffold/edge/context/main.md)
 
 ## Cross-Section Data Flow
 
@@ -51,7 +51,6 @@ Internet/Intranet :80
 | File | Purpose |
 |------|---------|
 | `README.md` | High-level platform overview |
-| `SCAFFOLD_PLAN.md` | Task tracking for this scaffold system |
 | `docker-compose.yml` | Service orchestration |
 | `Edge-Node/AGENTS.md` | AI agent entry point for edge node |
 | `scaffold/_meta/manifest.json` | Machine-readable scaffold index |

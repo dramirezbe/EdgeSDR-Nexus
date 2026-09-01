@@ -1,7 +1,7 @@
-# Postprocesamiento — Layer 2
+# Postprocesamiento — Layer 1
 
 > Parent: [../INDEX.md](../INDEX.md)
-> Children: [server](./server/main_markdown.md), [cli](./cli/main_markdown.md), [core](./core/main_markdown.md), [spectral](./spectral/main_markdown.md), [calibration](./calibration/main_markdown.md), [utils](./utils/main_markdown.md)
+> Children: [server](./server/main.md), [cli](./cli/main.md), [core](./core/main.md), [spectral](./spectral/main.md), [calibration](./calibration/main.md), [utils](./utils/main.md)
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose

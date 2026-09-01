@@ -1,7 +1,7 @@
-# Backend — Layer 2
+# Backend — Layer 1
 
 > Parent: [../INDEX.md](../INDEX.md)
-> Children: [data-ingest](./data-ingest/main_markdown.md), [management-api](./management-api/main_markdown.md), [campaigns](./campaigns/main_markdown.md), [reports](./reports/main_markdown.md), [websocket](./websocket/main_markdown.md), [models](./models/main_markdown.md)
+> Children: [data-ingest](./data-ingest/main.md), [management-api](./management-api/main.md), [campaigns](./campaigns/main.md), [reports](./reports/main.md), [websocket](./websocket/main.md), [models](./models/main.md)
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose

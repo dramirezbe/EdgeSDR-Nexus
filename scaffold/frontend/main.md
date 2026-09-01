@@ -1,7 +1,7 @@
-# Frontend — Layer 2
+# Frontend — Layer 1
 
 > Parent: [../INDEX.md](../INDEX.md)
-> Children: [auth](./auth/main_markdown.md), [monitoring](./monitoring/main_markdown.md), [campaigns](./campaigns/main_markdown.md), [network](./network/main_markdown.md), [admin](./admin/main_markdown.md), [audio](./audio/main_markdown.md), [core](./core/main_markdown.md)
+> Children: [auth](./auth/main.md), [monitoring](./monitoring/main.md), [campaigns](./campaigns/main.md), [network](./network/main.md), [admin](./admin/main.md), [audio](./audio/main.md), [core](./core/main.md)
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose
@@ -35,7 +35,11 @@ frontend/
 ├── package.json           # Dependencies and scripts
 ├── vite.config.ts         # Vite build configuration
 ├── tailwind.config.js     # Tailwind configuration
-└── tsconfig.json          # TypeScript configuration
+├── tsconfig.json          # TypeScript configuration
+├── eslint.config.js       # ESLint configuration
+├── .env.production        # Production environment variables
+├── data/                  # Static data files
+└── json/                  # JSON reference schemas
 ```
 
 ## Entry points

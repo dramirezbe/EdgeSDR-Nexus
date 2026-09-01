@@ -107,7 +107,6 @@ frontend/
 3. App.tsx is 1359 lines — single component doing too much
 4. CampaignDataViewer.tsx is 1759 lines — largest component
 5. No testing framework configured (no jest, vitest, or test files)
-6. `signaling.ts` exists in the exploration but wasn't found in directory listing — may be inside a component
 
 ### Layer 3 Proposals
 The frontend is large (~13,000+ lines) and heterogeneous. Proposed sub-sections:
@@ -364,6 +363,8 @@ Edge-Node/
 ├── context/                      # Architecture docs
 │   ├── RF_ENGINE.md              # C engine architecture (360 lines)
 │   ├── PYTHON_SERVICES.md        # Python services architecture (518 lines)
+│   ├── PROJECT_CONCEPTUAL_SUMMARY.md  # 470-line comprehensive architecture reference
+│   ├── OPTIMIZATION_ROADMAP.md   # Optimization plans and improvements
 │   ├── document/                 # Additional docs
 │   └── issues/                   # Post-mortems
 ├── db/

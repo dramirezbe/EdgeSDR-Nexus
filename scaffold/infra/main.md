@@ -1,6 +1,7 @@
 # Infra — Layer 1
 
 > Parent: [../INDEX.md](../INDEX.md)
+> Children: (none — no sub-sections)
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose
@@ -25,18 +26,14 @@ Docker orchestration, nginx reverse proxy, and deployment/backup scripts for the
 ├── install-backup-production.sh  # Copy fresh code to production
 ├── setup-backup-scheduler.sh # Cron template (prints instructions)
 ├── verify-backup-setup.sh    # 7-step backup health check
-├── COMANDOS-SERVIDOR.txt     # Manual server commands reference
-frontend/
-├── Dockerfile                # Multi-stage: node build -> nginx serve
-├── nginx.conf                # Active reverse proxy config (3600s API timeout)
-├── .dockerignore
-backend/
-├── Dockerfile                # Multi-stage: node:18-alpine build
-├── .dockerignore
-postprocesamiento/
-├── Dockerfile                # python:3.11-slim, gunicorn
-└── (no .dockerignore)
+└── COMANDOS-SERVIDOR.txt     # Manual server commands reference
 ```
+
+**Service Dockerfiles** (in their respective section directories):
+- `frontend/Dockerfile` — Multi-stage: node build -> nginx serve
+- `frontend/nginx.conf` — Active reverse proxy config (3600s API timeout)
+- `backend/Dockerfile` — Multi-stage: node:18-alpine build
+- `postprocesamiento/Dockerfile` — python:3.11-slim, gunicorn
 
 ## Docker Services
 

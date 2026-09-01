@@ -12,11 +12,11 @@ Spectral monitoring platform for Colombia's regulatory body (regulatory body). O
 
 | Section | Purpose | Docs |
 |---------|---------|------|
-| frontend | React/Vite TypeScript SPA — operator dashboard | [scaffold/frontend/main_markdown.md](scaffold/frontend/main_markdown.md) |
-| backend | Node.js/TypeScript REST API — sensor ingestion, CRUD, campaigns, reports | [scaffold/backend/main_markdown.md](scaffold/backend/main_markdown.md) |
-| postprocesamiento | Python Flask microservice — spectral analysis, compliance | [scaffold/postprocesamiento/main_markdown.md](scaffold/postprocesamiento/main_markdown.md) |
-| edge | Raspberry Pi 5 sensor — C99 RF engine + Python orchestrator | [scaffold/edge/main_markdown.md](scaffold/edge/main_markdown.md) |
-| infra | Docker Compose, nginx, deployment scripts | [scaffold/infra/main_markdown.md](scaffold/infra/main_markdown.md) |
+| frontend | React/Vite TypeScript SPA — operator dashboard | [scaffold/frontend/main.md](scaffold/frontend/main.md) |
+| backend | Node.js/TypeScript REST API — sensor ingestion, CRUD, campaigns, reports | [scaffold/backend/main.md](scaffold/backend/main.md) |
+| postprocesamiento | Python Flask microservice — spectral analysis, compliance | [scaffold/postprocesamiento/main.md](scaffold/postprocesamiento/main.md) |
+| edge | Raspberry Pi 5 sensor — C99 RF engine + Python orchestrator | [scaffold/edge/main.md](scaffold/edge/main.md) |
+| infra | Docker Compose, nginx, deployment scripts | [scaffold/infra/main.md](scaffold/infra/main.md) |
 
 Full scaffold index: [scaffold/INDEX.md](scaffold/INDEX.md)
 
@@ -57,14 +57,14 @@ Internet/Intranet :80
 | File | Description |
 |------|-------------|
 | [frontend/DIAGRAM.md](frontend/DIAGRAM.md) | Frontend architecture diagram |
-| [scaffold/frontend/main_markdown.md](scaffold/frontend/main_markdown.md) | Section overview |
-| [scaffold/frontend/auth/main_markdown.md](scaffold/frontend/auth/main_markdown.md) | Authentication (Azure AD SSO) |
-| [scaffold/frontend/monitoring/main_markdown.md](scaffold/frontend/monitoring/main_markdown.md) | Real-time spectrum monitoring |
-| [scaffold/frontend/campaigns/main_markdown.md](scaffold/frontend/campaigns/main_markdown.md) | Campaign management |
-| [scaffold/frontend/network/main_markdown.md](scaffold/frontend/network/main_markdown.md) | Sensor network map |
-| [scaffold/frontend/admin/main_markdown.md](scaffold/frontend/admin/main_markdown.md) | Admin configuration |
-| [scaffold/frontend/audio/main_markdown.md](scaffold/frontend/audio/main_markdown.md) | WebRTC audio streaming |
-| [scaffold/frontend/core/main_markdown.md](scaffold/frontend/core/main_markdown.md) | App shell, routing, API client |
+| [scaffold/frontend/main.md](scaffold/frontend/main.md) | Section overview |
+| [scaffold/frontend/auth/main.md](scaffold/frontend/auth/main.md) | Authentication (Azure AD SSO) |
+| [scaffold/frontend/monitoring/main.md](scaffold/frontend/monitoring/main.md) | Real-time spectrum monitoring |
+| [scaffold/frontend/campaigns/main.md](scaffold/frontend/campaigns/main.md) | Campaign management |
+| [scaffold/frontend/network/main.md](scaffold/frontend/network/main.md) | Sensor network map |
+| [scaffold/frontend/admin/main.md](scaffold/frontend/admin/main.md) | Admin configuration |
+| [scaffold/frontend/audio/main.md](scaffold/frontend/audio/main.md) | WebRTC audio streaming |
+| [scaffold/frontend/core/main.md](scaffold/frontend/core/main.md) | App shell, routing, API client |
 
 ### Backend
 
@@ -77,25 +77,25 @@ Internet/Intranet :80
 | [backend/ENDPOINT_CAMPAIGNS_CAMBIOS.md](backend/ENDPOINT_CAMPAIGNS_CAMBIOS.md) | Campaigns endpoint changes |
 | [backend/EJEMPLOS_CAMPAIGNS_ENDPOINT.md](backend/EJEMPLOS_CAMPAIGNS_ENDPOINT.md) | Campaigns endpoint examples |
 | [backend/SIMULADOR_AM_FM.md](backend/SIMULADOR_AM_FM.md) | AM/FM simulator |
-| [scaffold/backend/main_markdown.md](scaffold/backend/main_markdown.md) | Section overview |
-| [scaffold/backend/data-ingest/main_markdown.md](scaffold/backend/data-ingest/main_markdown.md) | Sensor data ingestion |
-| [scaffold/backend/management-api/main_markdown.md](scaffold/backend/management-api/main_markdown.md) | Management CRUD API |
-| [scaffold/backend/campaigns/main_markdown.md](scaffold/backend/campaigns/main_markdown.md) | Campaign lifecycle |
-| [scaffold/backend/reports/main_markdown.md](scaffold/backend/reports/main_markdown.md) | Compliance reports |
-| [scaffold/backend/websocket/main_markdown.md](scaffold/backend/websocket/main_markdown.md) | WebSocket real-time |
-| [scaffold/backend/models/main_markdown.md](scaffold/backend/models/main_markdown.md) | Data models and types |
+| [scaffold/backend/main.md](scaffold/backend/main.md) | Section overview |
+| [scaffold/backend/data-ingest/main.md](scaffold/backend/data-ingest/main.md) | Sensor data ingestion |
+| [scaffold/backend/management-api/main.md](scaffold/backend/management-api/main.md) | Management CRUD API |
+| [scaffold/backend/campaigns/main.md](scaffold/backend/campaigns/main.md) | Campaign lifecycle |
+| [scaffold/backend/reports/main.md](scaffold/backend/reports/main.md) | Compliance reports |
+| [scaffold/backend/websocket/main.md](scaffold/backend/websocket/main.md) | WebSocket real-time |
+| [scaffold/backend/models/main.md](scaffold/backend/models/main.md) | Data models and types |
 
 ### Postprocesamiento
 
 | File | Description |
 |------|-------------|
-| [scaffold/postprocesamiento/main_markdown.md](scaffold/postprocesamiento/main_markdown.md) | Section overview |
-| [scaffold/postprocesamiento/server/main_markdown.md](scaffold/postprocesamiento/server/main_markdown.md) | Flask HTTP server |
-| [scaffold/postprocesamiento/cli/main_markdown.md](scaffold/postprocesamiento/cli/main_markdown.md) | Command-line interface |
-| [scaffold/postprocesamiento/core/main_markdown.md](scaffold/postprocesamiento/core/main_markdown.md) | Detection pipeline |
-| [scaffold/postprocesamiento/spectral/main_markdown.md](scaffold/postprocesamiento/spectral/main_markdown.md) | Signal processing |
-| [scaffold/postprocesamiento/calibration/main_markdown.md](scaffold/postprocesamiento/calibration/main_markdown.md) | License compliance |
-| [scaffold/postprocesamiento/utils/main_markdown.md](scaffold/postprocesamiento/utils/main_markdown.md) | DSP utilities |
+| [scaffold/postprocesamiento/main.md](scaffold/postprocesamiento/main.md) | Section overview |
+| [scaffold/postprocesamiento/server/main.md](scaffold/postprocesamiento/server/main.md) | Flask HTTP server |
+| [scaffold/postprocesamiento/cli/main.md](scaffold/postprocesamiento/cli/main.md) | Command-line interface |
+| [scaffold/postprocesamiento/core/main.md](scaffold/postprocesamiento/core/main.md) | Detection pipeline |
+| [scaffold/postprocesamiento/spectral/main.md](scaffold/postprocesamiento/spectral/main.md) | Signal processing |
+| [scaffold/postprocesamiento/calibration/main.md](scaffold/postprocesamiento/calibration/main.md) | License compliance |
+| [scaffold/postprocesamiento/utils/main.md](scaffold/postprocesamiento/utils/main.md) | DSP utilities |
 
 ### Edge Node
 
@@ -108,13 +108,13 @@ Internet/Intranet :80
 | [Edge-Node/PROJECT_CONCEPTUAL_SUMMARY.md](Edge-Node/PROJECT_CONCEPTUAL_SUMMARY.md) | Project conceptual summary |
 | [Edge-Node/daemons/README.md](Edge-Node/daemons/README.md) | Systemd units documentation |
 | [Edge-Node/examples/BPFTRACE_USAGE.md](Edge-Node/examples/BPFTRACE_USAGE.md) | BPF tracing examples |
-| [scaffold/edge/main_markdown.md](scaffold/edge/main_markdown.md) | Section overview |
-| [scaffold/edge/rf-engine/main_markdown.md](scaffold/edge/rf-engine/main_markdown.md) | C99 RF engine |
-| [scaffold/edge/python-services/main_markdown.md](scaffold/edge/python-services/main_markdown.md) | Python control plane |
-| [scaffold/edge/utils/main_markdown.md](scaffold/edge/utils/main_markdown.md) | Shared utilities |
-| [scaffold/edge/build-deploy/main_markdown.md](scaffold/edge/build-deploy/main_markdown.md) | Build and deployment |
-| [scaffold/edge/gps-lte/main_markdown.md](scaffold/edge/gps-lte/main_markdown.md) | GPS/LTE modules |
-| [scaffold/edge/context/main_markdown.md](scaffold/edge/context/main_markdown.md) | Architecture docs |
+| [scaffold/edge/main.md](scaffold/edge/main.md) | Section overview |
+| [scaffold/edge/rf-engine/main.md](scaffold/edge/rf-engine/main.md) | C99 RF engine |
+| [scaffold/edge/python-services/main.md](scaffold/edge/python-services/main.md) | Python control plane |
+| [scaffold/edge/utils/main.md](scaffold/edge/utils/main.md) | Shared utilities |
+| [scaffold/edge/build-deploy/main.md](scaffold/edge/build-deploy/main.md) | Build and deployment |
+| [scaffold/edge/gps-lte/main.md](scaffold/edge/gps-lte/main.md) | GPS/LTE modules |
+| [scaffold/edge/context/main.md](scaffold/edge/context/main.md) | Architecture docs |
 
 ### Context & Analysis
 

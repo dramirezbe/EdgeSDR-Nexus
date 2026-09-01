@@ -1,6 +1,6 @@
 # Core — Layer 3
 
-> Parent: [../main_markdown.md](../main_markdown.md)
+> Parent: [../main.md](../main.md)
 > Last audited: 2026-08-31 @ commit dc6c386
 
 ## Purpose
@@ -44,5 +44,4 @@ core/
 - App.tsx is monolithic — should be decomposed into smaller components
 - No error boundaries for graceful error handling
 - No loading states for initial data fetch
-- `signaling.ts` file referenced in exploration but not found in directory listing
 - No deep linking — all tabs are on the same URL
