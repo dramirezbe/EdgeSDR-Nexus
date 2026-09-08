@@ -5,20 +5,23 @@ Generates a synthetic two-tone signal (1 kHz + 5 kHz), injects it into the
 RF engine via dry-run, and gets back raw complex IQ samples.
 No HackRF needed — the engine skips all hardware operations.
 
+Requires: RF engine running (./rf_app).
+
 Usage:
     python playground/02_dry_run_iq.py
 """
 import asyncio
-import json
 import math
-import zmq
-import zmq.asyncio
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils.request_util import ZmqPairController
 
 IPC_ADDR = "ipc:///tmp/rf_engine"
 
 # ── Signal parameters ────────────────────────────────────────────────
 SAMPLE_RATE = 8_000_000       # 8 MS/s
-N_SAMPLES = 200_000           # 25 ms of data
+N_SAMPLES = 20_000_000        # 2.5 s of data (~400 MB JSON payload)
 FREQ_1 = 1000                 # 1 kHz tone
 FREQ_2 = 5000                 # 5 kHz tone
 AMPLITUDE_1 = 0.5
@@ -57,22 +60,25 @@ def build_payload(iq_data: list) -> dict:
 
 
 async def run():
+    payload_bytes = N_SAMPLES * 2 * 10  # rough JSON estimate: 40M floats × ~10 chars
     print(f"Generating {N_SAMPLES} IQ samples ({FREQ_1} Hz + {FREQ_2} Hz tones) ...")
+    print(f"  Payload estimate: ~{payload_bytes / 1e6:.0f} MB JSON")
+
     iq_data = generate_iq(SAMPLE_RATE, N_SAMPLES)
     payload = build_payload(iq_data)
 
-    ctx = zmq.asyncio.Context()
-    sock = ctx.socket(zmq.REQ)
-    sock.setsockopt(zmq.LINGER, 0)
-    sock.connect(IPC_ADDR)
+    # max_queue=-1: lift SNDHWM/RCVHWM limits for large IQ payloads
+    async with ZmqPairController(IPC_ADDR, is_server=False, max_queue=-1) as ctrl:
+        print(f"Sending dry-run IQ request to {IPC_ADDR} ...")
+        try:
+            resp = await ctrl.request(payload)
+        except TimeoutError:
+            print("ERROR: Timeout — no RF engine running?")
+            return
 
-    print(f"Sending dry-run IQ request to {IPC_ADDR} ...")
-    await sock.send_string(json.dumps(payload))
-
-    resp_raw = await sock.recv_string()
-    resp = json.loads(resp_raw)
-    sock.close()
-    ctx.term()
+    if resp is None:
+        print("ERROR: No response (timeout)")
+        return
 
     # ── Response ──────────────────────────────────────────────────────
     if resp.get("status") != "ok":

@@ -9,9 +9,11 @@ Usage:
     python playground/03_live_iq.py
 """
 import asyncio
-import json
-import zmq
-import zmq.asyncio
+import struct
+import sys
+from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from utils.request_util import ZmqPairController
 
 IPC_ADDR = "ipc:///tmp/rf_engine"
 
@@ -32,18 +34,17 @@ PAYLOAD = {
 
 
 async def run():
-    ctx = zmq.asyncio.Context()
-    sock = ctx.socket(zmq.REQ)
-    sock.setsockopt(zmq.LINGER, 0)
-    sock.connect(IPC_ADDR)
+    async with ZmqPairController(IPC_ADDR, is_server=False) as ctrl:
+        print(f"Sending live IQ request to {IPC_ADDR} ...")
+        try:
+            resp = await ctrl.request(PAYLOAD)
+        except TimeoutError:
+            print("ERROR: Timeout — no RF engine running?")
+            return
 
-    print(f"Sending live IQ request to {IPC_ADDR} ...")
-    await sock.send_string(json.dumps(PAYLOAD))
-
-    resp_raw = await sock.recv_string()
-    resp = json.loads(resp_raw)
-    sock.close()
-    ctx.term()
+    if resp is None:
+        print("ERROR: No response (timeout)")
+        return
 
     # ── Response ──────────────────────────────────────────────────────
     if resp.get("status") != "ok":
@@ -85,5 +86,4 @@ async def run():
 
 
 if __name__ == "__main__":
-    import struct
     asyncio.run(run())

@@ -217,16 +217,21 @@ class ZmqPairController:
     un canal REQ/REP 1:1 con timeout y reciclado del socket para descartar
     cualquier reply tardío tras un timeout.
     """
-    def __init__(self, addr: str, is_server: bool = True, verbose: bool = False):
+    def __init__(self, addr: str, is_server: bool = True, verbose: bool = False,
+                 max_queue: int = 1):
         """
         Args:
             addr (str): Dirección del socket (ej: 'ipc:///tmp/rf_engine').
             is_server (bool): Si es True, realiza un 'bind', de lo contrario 'connect'.
             verbose (bool): Activa logs de depuración para mensajes enviados/recibidos.
+            max_queue (int): Límite de mensajes en cola (SNDHWM/RCVHWM).
+                1 (default): estricto request/reply, descarta respuestas tardías.
+                -1: sin límite (ZMQ HWM=0) — para payloads grandes como dry-run IQ.
         """
         self.addr = addr
         self.is_server = is_server
         self.verbose = verbose
+        self.max_queue = max_queue
         self.timeout_ms = 15000
         self.send_timeout_ms = 15000
         self.context = None
@@ -238,8 +243,10 @@ class ZmqPairController:
         assert self.socket is not None
         self.socket.setsockopt(zmq.LINGER, 0)
         self.socket.setsockopt(zmq.IMMEDIATE, 1)
-        self.socket.setsockopt(zmq.SNDHWM, 1)
-        self.socket.setsockopt(zmq.RCVHWM, 1)
+        # HWM=0 means unlimited in ZMQ; preserve max_queue=1 default for production
+        hwm = 0 if self.max_queue == -1 else self.max_queue
+        self.socket.setsockopt(zmq.SNDHWM, hwm)
+        self.socket.setsockopt(zmq.RCVHWM, hwm)
 
     def _bind_or_connect(self):
         """Aplica la estrategia bind/connect y sanea el archivo IPC si aplica."""
