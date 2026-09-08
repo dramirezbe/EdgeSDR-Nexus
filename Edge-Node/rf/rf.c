@@ -989,6 +989,52 @@ int publish_results(double* psd_array, int length, SDR_cfg_t *local_hack, uint64
 }
 
 /**
+ * @brief Serializa muestras IQ complejas como array interleaved [I0,Q0,...] y metadatos.
+ * @param[in] iq_data Arreglo de muestras complejas IQ.
+ * @param[in] n_samples Número de muestras complejas.
+ * @param[in] local_hack Configuración actual del hardware para cálculos de frecuencia.
+ * @param[in] original_center_freq Frecuencia central original (sin corrección PPM).
+ * @return 0 si el reply fue enviado, -1 si falló.
+ */
+static int publish_iq_results(
+    const double complex *iq_data,
+    size_t n_samples,
+    SDR_cfg_t *local_hack,
+    uint64_t original_center_freq
+) {
+    if (!zmq_channel || !iq_data || n_samples == 0) return -1;
+
+    cJSON *root = cJSON_CreateObject();
+    if (!root) return -1;
+
+    double fs = local_hack->sample_rate;
+    double start_freq = (double)original_center_freq - (fs / 2.0);
+    double end_freq   = (double)original_center_freq + (fs / 2.0);
+
+    cJSON_AddStringToObject(root, "status", "ok");
+    cJSON_AddStringToObject(root, "mode", "iq");
+    cJSON_AddNumberToObject(root, "start_freq_hz", start_freq);
+    cJSON_AddNumberToObject(root, "end_freq_hz", end_freq);
+    cJSON_AddNumberToObject(root, "sample_rate_hz", fs);
+    cJSON_AddNumberToObject(root, "n_samples", (double)n_samples);
+
+    // Serialize interleaved [I0, Q0, I1, Q1, ...]
+    double *interleaved = (double*)malloc(n_samples * 2 * sizeof(double));
+    if (!interleaved) { cJSON_Delete(root); return -1; }
+    for (size_t i = 0; i < n_samples; ++i) {
+        interleaved[2*i]     = creal(iq_data[i]);
+        interleaved[2*i + 1] = cimag(iq_data[i]);
+    }
+    cJSON_AddItemToObject(root, "iq",
+        cJSON_CreateDoubleArray(interleaved, (int)(n_samples * 2)));
+    free(interleaved);
+
+    int rc = send_json_reply(root);
+    cJSON_Delete(root);
+    return rc;
+}
+
+/**
  * @brief Hilo principal de procesamiento y transmisión de audio.
  * @details Implementa el siguiente flujo de trabajo (pipeline):
  * - **Adquisición**: Extrae muestras IQ de 8 bits desde @ref audio_rb.
@@ -1338,6 +1384,39 @@ int main() {
         atomic_store(&audio_ctx.current_fs_hz, (double)local_hack.sample_rate);
         clock_gettime(CLOCK_MONOTONIC, &last_activity_time);
 
+        // --- DRY-RUN: inject IQ into ring buffer, bypass hardware ---
+        if (local_desired.dry_run && local_desired.dry_run_iq && local_desired.dry_run_iq_len > 0) {
+            printf("[RF] DRY-RUN: injecting %zu complex samples\n", local_desired.dry_run_iq_len);
+
+            size_t n_bytes = local_desired.dry_run_iq_len * 2;
+            int8_t *dry_bytes = (int8_t*)malloc(n_bytes);
+            if (dry_bytes) {
+                for (size_t i = 0; i < local_desired.dry_run_iq_len; ++i) {
+                    double i_val = local_desired.dry_run_iq[2*i];
+                    double q_val = local_desired.dry_run_iq[2*i + 1];
+                    dry_bytes[2*i]     = (int8_t)(i_val > 127.0 ? 127.0 : (i_val < -128.0 ? -128.0 : i_val));
+                    dry_bytes[2*i + 1] = (int8_t)(q_val > 127.0 ? 127.0 : (q_val < -128.0 ? -128.0 : q_val));
+                }
+
+                rb_reset(&rb);
+                rb_write(&rb, dry_bytes, n_bytes);
+                free(dry_bytes);
+
+                pthread_mutex_lock(&rb_mutex);
+                pthread_cond_signal(&rb_cond);
+                pthread_mutex_unlock(&rb_mutex);
+
+                local_rb.total_bytes = n_bytes;
+            } else {
+                fprintf(stderr, "[RF] DRY-RUN: malloc failed\n");
+                send_status_reply("error", "dry_run_alloc_failed");
+                clock_gettime(CLOCK_MONOTONIC, &last_activity_time);
+                continue;
+            }
+        }
+
+        if (!local_desired.dry_run) {
+        // --- HARDWARE PATH ---
         if (ensure_hackrf_session_is_healthy() != 0) {
             send_status_reply("error", "hackrf_unavailable");
             clock_gettime(CLOCK_MONOTONIC, &last_activity_time);
@@ -1412,6 +1491,8 @@ int main() {
          */
         rb_discard_all(&rb);
 
+        } // end !dry_run hardware gate
+
         struct timespec ts_timeout;
         clock_gettime(CLOCK_REALTIME, &ts_timeout);
         ts_timeout.tv_sec += 5;
@@ -1470,24 +1551,46 @@ int main() {
                                                   local_hack.center_freq_corrected, local_hack.sample_rate);
                 }
 
-                if (local_desired.method_psd == PFB) {
-                    execute_pfb_psd(&proc_ws.sig, &local_psd, proc_ws.freq, proc_ws.psd);
+                if (local_desired.method_psd == IQ) {
+                    // IQ mode: skip PSD, publish raw complex samples
+                    if (publish_iq_results(
+                            proc_ws.sig.signal_iq,
+                            proc_ws.sig.n_signal,
+                            &local_hack,
+                            local_desired.center_freq
+                        ) != 0) {
+                        fprintf(stderr, "[RF] Error: Failed to send IQ reply.\n");
+                        clock_gettime(CLOCK_MONOTONIC, &last_activity_time);
+                        continue;
+                    }
                 } else {
-                    execute_welch_psd(&proc_ws.sig, &local_psd, proc_ws.freq, proc_ws.psd);
+                    // PSD mode: existing path unchanged
+                    if (local_desired.method_psd == PFB) {
+                        execute_pfb_psd(&proc_ws.sig, &local_psd, proc_ws.freq, proc_ws.psd);
+                    } else {
+                        execute_welch_psd(&proc_ws.sig, &local_psd, proc_ws.freq, proc_ws.psd);
+                    }
+
+                    if (publish_results(
+                        proc_ws.psd,
+                        local_psd.nperseg,
+                        &local_hack,
+                        local_desired.center_freq,
+                        (int)local_desired.rf_mode,
+                        audio_ctx.am_depth.depth_ema,
+                        audio_ctx.fm_dev.dev_ema_hz
+                    ) != 0) {
+                        fprintf(stderr, "[RF] Error: Failed to send PSD reply.\n");
+                        clock_gettime(CLOCK_MONOTONIC, &last_activity_time);
+                        continue;
+                    }
                 }
 
-                if (publish_results(
-                    proc_ws.psd,
-                    local_psd.nperseg,
-                    &local_hack,
-                    local_desired.center_freq,
-                    (int)local_desired.rf_mode,
-                    audio_ctx.am_depth.depth_ema,
-                    audio_ctx.fm_dev.dev_ema_hz
-                ) != 0) {
-                    fprintf(stderr, "[RF] Error: Failed to send PSD reply.\n");
-                    clock_gettime(CLOCK_MONOTONIC, &last_activity_time);
-                    continue;
+                // Free dry-run IQ data after use
+                if (local_desired.dry_run_iq) {
+                    free(local_desired.dry_run_iq);
+                    local_desired.dry_run_iq = NULL;
+                    local_desired.dry_run_iq_len = 0;
                 }
 
                 {

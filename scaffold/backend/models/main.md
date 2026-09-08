@@ -1,7 +1,7 @@
 # Models — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Data layer: TypeScript models wrapping PostgreSQL queries, type definitions, and database migration/connection infrastructure.

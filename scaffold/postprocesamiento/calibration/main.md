@@ -1,7 +1,7 @@
 # Calibration — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 License database I/O and compliance matching: loads Colombian radio license CSV, indexes by DANE code and frequency, and matches detected emissions against licensed parameters.

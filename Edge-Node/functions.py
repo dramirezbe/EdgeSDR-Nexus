@@ -128,6 +128,14 @@ def format_data_for_upload(payload, log: logging.Logger) -> dict:
         "mac": cfg.get_mac()
     }
 
+    # IQ mode: include mode and n_samples, skip PSD-specific fields
+    if payload.get("mode") == "iq":
+        post_dict["mode"] = "iq"
+        post_dict["n_samples"] = int(payload.get("n_samples", 0))
+        post_dict["sample_rate_hz"] = int(payload.get("sample_rate_hz", 0))
+        # Remove Pxx if present (IQ mode doesn't produce PSD)
+        post_dict.pop("Pxx", None)
+
     if payload.get("excursion_hz", 0) != 0:
         post_dict.update({"excursion_hz": int(payload.get("excursion_hz"))})
 
@@ -298,6 +306,10 @@ class AcquireDual:
         """
         if not isinstance(acquisition_result, dict):
             raise TypeError("Se esperaba que _single_acquire devolviera un dict.")
+        
+        # IQ mode returns raw complex samples, not PSD — skip DC correction
+        if acquisition_result.get("mode") == "iq":
+            return acquisition_result
         
         if "Pxx" not in acquisition_result:
             raise KeyError("No se encontró la llave 'Pxx' en acquisition_result.")

@@ -74,9 +74,9 @@ class ServerRealtimeConfig:
             raise ValueError(f"Puerto de antena {self.antenna_port} inválido.")
         
         # Validación de métodos de Densidad Espectral de Potencia (PSD)
-        if self.method_psd not in ["pfb", "welch"]:
+        if self.method_psd not in ["pfb", "welch", "iq"]:
             self.method_psd = "pfb"
-            raise ValueError(f"Método PSD {self.method_psd} inválido. Debe ser pfb o welch.")
+            raise ValueError(f"Método PSD {self.method_psd} inválido. Debe ser pfb, welch o iq.")
 
         if self.filter is not None:
            if self.filter.start_freq_hz > self.filter.end_freq_hz:

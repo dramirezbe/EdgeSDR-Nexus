@@ -2,7 +2,7 @@
 
 > Parent: [../INDEX.md](../INDEX.md)
 > Children: [server](./server/main.md), [cli](./cli/main.md), [core](./core/main.md), [spectral](./spectral/main.md), [calibration](./calibration/main.md), [utils](./utils/main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Python Flask microservice for spectral analysis and regulatory compliance evaluation: receives measurement frames from the backend, detects emissions, measures parameters, and evaluates compliance against Colombian radio licenses.

@@ -2,7 +2,7 @@
 
 > Parent: [../INDEX.md](../INDEX.md)
 > Children: [rf-engine](./rf-engine/main.md), [python-services](./python-services/main.md), [utils](./utils/main.md), [build-deploy](./build-deploy/main.md), [gps-lte](./gps-lte/main.md), [context](./context/main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Raspberry Pi 5 sensor node: hybrid C99 data plane (HackRF One SDR control, real-time DSP, Opus audio) + Python 3.11+ control plane (orchestration, campaign scheduling, WebRTC, status reporting).
@@ -30,6 +30,7 @@ Edge-Node/
 ├── docs/                   # Sphinx/Doxygen documentation
 ├── json/                   # API/IPC contract schemas
 ├── context/                # Architecture docs (see context sub-section)
+├── playground/             # Testing & tutorials: PFB/dry-run/IQ scripts + developer guide
 ├── daemons/                # Generated systemd units (gitignored)
 ├── db/                     # Reference data (117,522 Colombian spectrum assignments)
 ├── orchestrator.py         # Main Python entry (see python-services)
@@ -52,7 +53,7 @@ Edge-Node/
 
 ## Key interactions
 - **Sensors -> Backend:** POST status/gps/data, GET realtime/campaigns (via Python HTTP client)
-- **Python -> C:** ZMQ REQ/REP (send config, receive PSD)
+- **Python -> C:** ZMQ REQ/REP (send config, receive PSD or IQ depending on `method_psd`)
 - **C -> Audio:** Opus TCP to port 9000 -> server_webrtc.py -> GStreamer -> WebRTC -> browser
 - **Shared state:** `/dev/shm/persistent.json` (calibration, GPS, campaign params, locks)
 
@@ -62,6 +63,7 @@ Edge-Node/
 - Build artifacts placed in repo root, gitignored
 - No lint/typecheck/CI configured
 - All timestamps are Colombia time (UTC-5)
+- **Playground:** `playground/` contains testing scripts (PFB, dry-run IQ, live IQ) and `TUTORIAL_IQ_DRY_RUN.md` developer guide — start here for RF engine exploration
 
 ## Open questions / TODO
 - WebRTC depends on GStreamer (system dependency, not in requirements.txt)

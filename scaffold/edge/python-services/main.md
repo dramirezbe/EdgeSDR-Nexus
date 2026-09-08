@@ -1,7 +1,7 @@
 # Python Services — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Control plane orchestration: fetches configurations from backend API, drives C RF engine over ZMQ IPC, manages campaign scheduling via cron, streams audio via WebRTC, and handles status reporting and retry queues.
@@ -37,13 +37,20 @@ python-services/
 
 ## Key interactions
 - **Orchestrator -> Backend:** `GET /api/sensor/:mac/realtime` (poll config), `GET /api/sensor/:mac/campaigns` (poll campaigns)
-- **Orchestrator -> C engine:** ZMQ REQ/REP (send config, receive PSD)
+- **Orchestrator -> C engine:** ZMQ REQ/REP (send config, receive PSD — orchestrator hardcodes `method_psd: "pfb"`)
+  - Request payload: `json/rf-engine/params.jsonc` — all fields, types, defaults
+  - Response payload: `json/POST-data.jsonc` — `Pxx`, `excursion_hz`, `depth`
+  - Python validation: `utils/request_util.py` `ServerRealtimeConfig` class
 - **Orchestrator -> Backend:** `POST /api/sensor/data` (upload spectrum), `POST /api/sensor/status` (upload status)
+  - Upload logic: `functions.py` `format_data_for_upload()` — skips `Pxx` for IQ mode
 - **Campaign runner -> Backend:** `POST /api/sensor/data` (upload with campaign_id)
 - **Campaign runner -> C engine:** ZMQ REQ/REP (acquire spectrum)
 - **Status reporter -> Backend:** `POST /api/sensor/status` (hardware metrics)
 - **WebRTC -> C engine:** TCP :9000 (Opus frames) -> GStreamer -> WebRTC -> browser
 - **Shared state:** `/dev/shm/persistent.json` (calibration, GPS, campaign params, locks)
+- **IQ mode (dev only):** Test scripts can send `method_psd: "iq"` via ZMQ directly to get raw complex samples; Python validation accepts "iq" in `ServerRealtimeConfig`
+- **Dry-run (dev only):** Test scripts send `dry_run: true` + `dry_run_iq: [...]` to inject synthetic IQ without HackRF
+  - Tutorial: `Edge-Node/playground/TUTORIAL_IQ_DRY_RUN.md` — full developer guide with examples
 
 ## Key Design Patterns
 - **Global state machine:** `GlobalSys` prevents concurrent acquisitions (IDLE/REALTIME/CAMPAIGN/KALIBRATING)
@@ -54,11 +61,15 @@ python-services/
 - **Guard flags:** `campaign_runner_running` prevents overlapping campaign executions
 
 ## Common tasks & gotchas
-- Campaign cron scheduler clears ALL `CAMPAIGN_*` jobs and keeps only highest `campaign_id` in window
+- Campaign cron scheduler clears ALL `CAMPAIGN_*` jobs and keeps only highest `campaign_id` in window — `campaign_runner.py`
 - WebRTC server requires GStreamer system dependency — not in requirements.txt
-- All timestamps are Colombia time (UTC-5) with manual offset
+- All timestamps are Colombia time (UTC-5) with manual offset — `cfg.py`
 - `run_and_capture()` wraps every entrypoint for consistent error handling
-- Status reporter retries up to 10 times with 0.5s delay
+- Status reporter retries up to 10 times with 0.5s delay — `status.py`
+- **To change what the orchestrator sends to C:** `orchestrator.py` `_realtime_thread()` + `utils/request_util.py` `ServerRealtimeConfig`
+- **To change upload data shape:** `functions.py` `format_data_for_upload()` — note IQ mode skips `Pxx`
+- **To add a new IPC command:** `utils/request_util.py` `send_rf_request()`, C-side `parser.c`
+- **To change campaign scheduling:** `campaign_runner.py`, `functions.py` campaign state machine
 
 ## Open questions / TODO
 - WebRTC server depends on GStreamer — not documented in requirements.txt

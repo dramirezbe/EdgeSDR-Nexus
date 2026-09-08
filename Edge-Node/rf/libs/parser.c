@@ -73,6 +73,12 @@ static void set_default_config(DesiredCfg_t *target) {
     target->filter_enabled = false;         // Default: Filter NULL/Off
     target->filter_cfg.start_freq_hz = 0;
     target->filter_cfg.end_freq_hz   = 0;
+
+    // Dry-run Settings
+    if (target->dry_run_iq) free(target->dry_run_iq);
+    target->dry_run        = false;
+    target->dry_run_iq     = NULL;
+    target->dry_run_iq_len = 0;
 }
 
 int parse_config_rf(const char *json_string, DesiredCfg_t *target) {
@@ -137,7 +143,9 @@ int parse_config_rf(const char *json_string, DesiredCfg_t *target) {
     // 5. PSD & Windowing
     cJSON *m_psd = cJSON_GetObjectItemCaseSensitive(root, "method_psd");
     if (cJSON_IsString(m_psd)) {
-        target->method_psd = (strcasecmp(m_psd->valuestring, "pfb") == 0) ? PFB : WELCH;
+        if (strcasecmp(m_psd->valuestring, "pfb") == 0)     target->method_psd = PFB;
+        else if (strcasecmp(m_psd->valuestring, "iq") == 0) target->method_psd = IQ;
+        else                                                 target->method_psd = WELCH;
     }
 
     cJSON *rbw = cJSON_GetObjectItemCaseSensitive(root, "rbw_hz");
@@ -175,6 +183,26 @@ int parse_config_rf(const char *json_string, DesiredCfg_t *target) {
     cJSON *ppm = cJSON_GetObjectItemCaseSensitive(root, "ppm_error");
     if (cJSON_IsNumber(ppm)) target->ppm_error = (float)ppm->valuedouble;
 
+    // 7. Dry-run injection
+    cJSON *dry = cJSON_GetObjectItemCaseSensitive(root, "dry_run");
+    if (cJSON_IsBool(dry)) target->dry_run = cJSON_IsTrue(dry);
+
+    cJSON *dry_iq = cJSON_GetObjectItemCaseSensitive(root, "dry_run_iq");
+    if (cJSON_IsArray(dry_iq) && target->dry_run) {
+        int arr_len = cJSON_GetArraySize(dry_iq);
+        if (arr_len > 0 && (arr_len % 2) == 0) {
+            size_t n_complex = (size_t)(arr_len / 2);
+            target->dry_run_iq = (double*)malloc((size_t)arr_len * sizeof(double));
+            if (target->dry_run_iq) {
+                target->dry_run_iq_len = n_complex;
+                for (int i = 0; i < arr_len; ++i) {
+                    cJSON *item = cJSON_GetArrayItem(dry_iq, i);
+                    target->dry_run_iq[i] = cJSON_IsNumber(item) ? item->valuedouble : 0.0;
+                }
+            }
+        }
+    }
+
     cJSON_Delete(root);
     return 0;
 }
@@ -184,7 +212,7 @@ void print_config_summary_DEBUG(DesiredCfg_t *des, SDR_cfg_t *hw, PsdConfig_t *p
 
     const char* window_names[] = {"Hamming", "Hann", "Rectangular", "Blackman", "Flat Top", "Kaiser", "Tukey", "Bartlett"};
     const char* mode_names[]   = {"PSD (No Demod)", "FM Demodulation", "AM Demodulation"};
-    const char* psd_methods[]  = {"Welch", "PFB"};
+    const char* psd_methods[]  = {"Welch", "PFB", "IQ"};
 
     printf("\n"
            "┌──────────────────────────────────────────────────────────┐\n"
@@ -224,7 +252,7 @@ void print_config_summary_DEPLOY(DesiredCfg_t *des, SDR_cfg_t *hw, PsdConfig_t *
 
     // Compact Lookup Tables
     const char* m_n[] = {"PSD", "FM", "AM"};
-    const char* p_m[] = {"WCH", "PFB"};
+    const char* p_m[] = {"WCH", "PFB", "IQ"};
     const char* w_n[] = {"HMNG", "HANN", "RECT", "BLCK", "FTOP", "KSR", "TUKY", "BRTL"};
 
     // Line 1: Hardware, Gain, and FFT Resolution
@@ -252,7 +280,7 @@ void print_config_summary_DEPLOY(DesiredCfg_t *des, SDR_cfg_t *hw, PsdConfig_t *
     // Line 2: DSP, Windowing, Buffer, and Filter Range
     // Format: Method | RBW | Overlap | Window Name | Buffer Size | Filter Range
         printf("      %s | RBW:%d | OVP:%.0f%% | WIN:%s | BUF:%.3fMB",
-           p_m[des->method_psd % 2],
+           p_m[des->method_psd % 3],
            des->rbw,
            des->overlap * 100.0,
            w_n[psd->window_type % 8],

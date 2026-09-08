@@ -1,7 +1,7 @@
 # CLI — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Command-line interface for running spectral analysis locally without the Flask server. Useful for testing, debugging, and batch processing.

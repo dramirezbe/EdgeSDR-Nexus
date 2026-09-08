@@ -2,7 +2,7 @@
 
 > Parent: [../INDEX.md](../INDEX.md)
 > Children: [auth](./auth/main.md), [monitoring](./monitoring/main.md), [campaigns](./campaigns/main.md), [network](./network/main.md), [admin](./admin/main.md), [audio](./audio/main.md), [core](./core/main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 React/Vite TypeScript single-page application providing the operator dashboard for spectrum monitoring, campaign management, alerts, and administrative configuration.

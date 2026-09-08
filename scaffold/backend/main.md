@@ -2,7 +2,7 @@
 
 > Parent: [../INDEX.md](../INDEX.md)
 > Children: [data-ingest](./data-ingest/main.md), [management-api](./management-api/main.md), [campaigns](./campaigns/main.md), [reports](./reports/main.md), [websocket](./websocket/main.md), [models](./models/main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Node.js/TypeScript REST API server: coordinates sensor data ingestion, user/frontend CRUD operations, campaign lifecycle, compliance reports, and real-time WebSocket communication.

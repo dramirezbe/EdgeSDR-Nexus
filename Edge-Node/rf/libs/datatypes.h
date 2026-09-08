@@ -55,7 +55,8 @@ typedef enum {
  */
 typedef enum {
     WELCH, /**< Método de Welch (promediado de periodogramas). */
-    PFB    /**< Polyphase Filter Bank (Banco de filtros polifase). */
+    PFB,   /**< Polyphase Filter Bank (Banco de filtros polifase). */
+    IQ     /**< Raw complex IQ samples (sin procesamiento espectral). */
 } Psd_method;
 
 /**
@@ -143,6 +144,13 @@ typedef struct {
     /**@{*/
     bool filter_enabled;  /**< Habilitación del filtro digital. */
     filter_t filter_cfg;  /**< Configuración de frecuencias de corte. */
+    /**@}*/
+
+    /** @name Dry-run injection */
+    /**@{*/
+    bool     dry_run;           /**< Bypass HackRF, use injected IQ vector. */
+    double  *dry_run_iq;        /**< Injected IQ samples (interleaved I,Q). */
+    size_t   dry_run_iq_len;    /**< Number of complex samples in dry_run_iq. */
     /**@}*/
 } DesiredCfg_t;
 

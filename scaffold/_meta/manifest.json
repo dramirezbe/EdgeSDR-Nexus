@@ -1,6 +1,6 @@
 {
   "generated_at": "2026-08-31T00:00:00Z",
-  "commit": "dc6c386",
+  "commit": "2bcb560",
   "sections": [
     {
       "path": "scaffold/frontend/main.md",
@@ -16,7 +16,7 @@
         "scaffold/frontend/core/main.md"
       ],
       "purpose": "React/Vite TypeScript SPA operator dashboard",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/frontend/auth/main.md",
@@ -24,7 +24,7 @@
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Azure AD SSO + legacy auth, JWT, AuthContext",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/frontend/monitoring/main.md",
@@ -32,7 +32,7 @@
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Real-time spectrum monitoring, configuration, visualization",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/frontend/campaigns/main.md",
@@ -40,7 +40,7 @@
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Campaign lifecycle, data viewing, compliance reports",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/frontend/network/main.md",
@@ -48,7 +48,7 @@
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Sensor network map visualization",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/frontend/admin/main.md",
@@ -56,7 +56,7 @@
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "Antenna, user, and system configuration management",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/frontend/audio/main.md",
@@ -64,7 +64,7 @@
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "WebRTC audio streaming for demodulated AM/FM",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/frontend/core/main.md",
@@ -72,7 +72,7 @@
       "parent": "scaffold/frontend/main.md",
       "children": [],
       "purpose": "App shell, entry point, routing, sidebar, API client",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/backend/main.md",
@@ -87,7 +87,7 @@
         "scaffold/backend/models/main.md"
       ],
       "purpose": "Node.js/TypeScript REST API server with PostgreSQL and WebSocket",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/backend/data-ingest/main.md",
@@ -95,7 +95,7 @@
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Sensor-to-server data ingestion: status, GPS, spectrum, config",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/backend/management-api/main.md",
@@ -103,7 +103,7 @@
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Frontend CRUD: sensors, antennas, users, auth, config",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/backend/campaigns/main.md",
@@ -111,7 +111,7 @@
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Campaign lifecycle, status transitions, NDJSON streaming",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/backend/reports/main.md",
@@ -119,7 +119,7 @@
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Compliance report generation via Python microservice",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/backend/websocket/main.md",
@@ -127,7 +127,7 @@
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Real-time WebSocket for data/status/GPS and audio streaming",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/backend/models/main.md",
@@ -135,7 +135,7 @@
       "parent": "scaffold/backend/main.md",
       "children": [],
       "purpose": "Data layer: TypeScript models, types, database migration",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/postprocesamiento/main.md",
@@ -150,7 +150,7 @@
         "scaffold/postprocesamiento/utils/main.md"
       ],
       "purpose": "Python Flask microservice for spectral analysis and compliance",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/postprocesamiento/server/main.md",
@@ -158,7 +158,7 @@
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Flask HTTP server: /health, /analyze, /analyze_batch",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/postprocesamiento/cli/main.md",
@@ -166,7 +166,7 @@
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Command-line interface for local spectral analysis",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/postprocesamiento/core/main.md",
@@ -174,7 +174,7 @@
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Central orchestrator: mode routing, detection pipeline, compliance",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/postprocesamiento/spectral/main.md",
@@ -182,7 +182,7 @@
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "Signal processing: peak detection, bandwidth, noise floor, TDT",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/postprocesamiento/calibration/main.md",
@@ -190,7 +190,7 @@
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "License CSV I/O and compliance matching",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/postprocesamiento/utils/main.md",
@@ -198,7 +198,7 @@
       "parent": "scaffold/postprocesamiento/main.md",
       "children": [],
       "purpose": "DSP utilities: smoothing, noise floor, channel detection, regions",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/edge/main.md",
@@ -213,7 +213,7 @@
         "scaffold/edge/context/main.md"
       ],
       "purpose": "Raspberry Pi 5 sensor: C99 RF engine + Python orchestrator",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/edge/rf-engine/main.md",
@@ -221,7 +221,7 @@
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "C99 real-time data plane: HackRF, DSP, PSD, demodulation, Opus",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/edge/python-services/main.md",
@@ -229,7 +229,7 @@
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Python control plane: orchestrator, campaigns, WebRTC, status",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/edge/utils/main.md",
@@ -237,7 +237,7 @@
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Python utilities: IPC, shared memory, DC spike, DSP primitives",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/edge/build-deploy/main.md",
@@ -245,7 +245,7 @@
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Build system and deployment: CMake, install.sh, systemd units",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/edge/gps-lte/main.md",
@@ -253,7 +253,7 @@
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "C99 GPS and LTE modules for sensor positioning",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/edge/context/main.md",
@@ -261,7 +261,7 @@
       "parent": "scaffold/edge/main.md",
       "children": [],
       "purpose": "Architecture documentation and reference materials",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/infra/main.md",
@@ -269,7 +269,7 @@
       "parent": "scaffold/INDEX.md",
       "children": [],
       "purpose": "Docker Compose, nginx, deployment and backup scripts",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     },
     {
       "path": "scaffold/INDEX.md",
@@ -277,7 +277,7 @@
       "parent": "",
       "children": [],
       "purpose": "Master index of all scaffold sections with cross-references",
-      "last_audited_commit": "dc6c386"
+      "last_audited_commit": "2bcb560"
     }
   ]
 }

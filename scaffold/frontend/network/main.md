@@ -1,7 +1,7 @@
 # Network — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Sensor network visualization: interactive map showing all registered sensors with their locations, status, and basic info.

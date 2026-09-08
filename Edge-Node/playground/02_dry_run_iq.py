@@ -1,0 +1,107 @@
+"""
+02 — Dry-run IQ mode
+
+Generates a synthetic two-tone signal (1 kHz + 5 kHz), injects it into the
+RF engine via dry-run, and gets back raw complex IQ samples.
+No HackRF needed — the engine skips all hardware operations.
+
+Usage:
+    python playground/02_dry_run_iq.py
+"""
+import asyncio
+import json
+import math
+import zmq
+import zmq.asyncio
+
+IPC_ADDR = "ipc:///tmp/rf_engine"
+
+# ── Signal parameters ────────────────────────────────────────────────
+SAMPLE_RATE = 8_000_000       # 8 MS/s
+N_SAMPLES = 200_000           # 25 ms of data
+FREQ_1 = 1000                 # 1 kHz tone
+FREQ_2 = 5000                 # 5 kHz tone
+AMPLITUDE_1 = 0.5
+AMPLITUDE_2 = 0.3
+
+
+def generate_iq(sample_rate: int, n_samples: int) -> list:
+    """Generate interleaved IQ: [I0, Q0, I1, Q1, ...]"""
+    iq = []
+    for i in range(n_samples):
+        t = i / sample_rate
+        i_val = (AMPLITUDE_1 * math.cos(2 * math.pi * FREQ_1 * t)
+                 + AMPLITUDE_2 * math.cos(2 * math.pi * FREQ_2 * t))
+        q_val = 0.0
+        iq.append(i_val)
+        iq.append(q_val)
+    return iq
+
+
+def build_payload(iq_data: list) -> dict:
+    return {
+        "center_freq_hz": 98_000_000,
+        "sample_rate_hz": SAMPLE_RATE,
+        "method_psd": "iq",            # IQ mode
+        "demodulation": None,
+        "lna_gain": 0,
+        "vga_gain": 0,
+        "antenna_amp": False,
+        "antenna_port": 1,
+        "cooldown_request": 0.0,
+        "ppm_error": 0.0,
+        "filter": None,
+        "dry_run": True,               # bypass HackRF
+        "dry_run_iq": iq_data,         # inject synthetic IQ
+    }
+
+
+async def run():
+    print(f"Generating {N_SAMPLES} IQ samples ({FREQ_1} Hz + {FREQ_2} Hz tones) ...")
+    iq_data = generate_iq(SAMPLE_RATE, N_SAMPLES)
+    payload = build_payload(iq_data)
+
+    ctx = zmq.asyncio.Context()
+    sock = ctx.socket(zmq.REQ)
+    sock.setsockopt(zmq.LINGER, 0)
+    sock.connect(IPC_ADDR)
+
+    print(f"Sending dry-run IQ request to {IPC_ADDR} ...")
+    await sock.send_string(json.dumps(payload))
+
+    resp_raw = await sock.recv_string()
+    resp = json.loads(resp_raw)
+    sock.close()
+    ctx.term()
+
+    # ── Response ──────────────────────────────────────────────────────
+    if resp.get("status") != "ok":
+        print(f"ERROR: {resp}")
+        return
+
+    iq_out = resp.get("iq", [])
+    n_out = int(resp.get("n_samples", 0))
+    mode = resp.get("mode", "?")
+    fs = resp.get("sample_rate_hz", 0)
+    start_mhz = resp.get("start_freq_hz", 0) / 1e6
+    end_mhz = resp.get("end_freq_hz", 0) / 1e6
+
+    print(f"\n--- Dry-Run IQ Result ---")
+    print(f"  Mode:       {mode}")
+    print(f"  Band:       {start_mhz:.2f} – {end_mhz:.2f} MHz")
+    print(f"  Fs:         {fs / 1e6:.1f} MS/s")
+    print(f"  Samples:    {n_out} complex ({n_out * 2} floats in array)")
+    print(f"  IQ length:  {len(iq_out)}")
+    print(f"  First 6:    {iq_out[:6]}")
+
+    # ── Sanity check: convert back to complex ─────────────────────────
+    if len(iq_out) >= 2 * 6:
+        print(f"\n  Reconstructed complex samples:")
+        for j in range(min(3, n_out)):
+            re = iq_out[2 * j]
+            im = iq_out[2 * j + 1]
+            print(f"    [{j}] = {re:.6f} + {im:.6f}j  (|z| = {math.hypot(re, im):.6f})")
+
+
+if __name__ == "__main__":
+    asyncio.run(run())
