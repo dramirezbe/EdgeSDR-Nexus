@@ -71,6 +71,16 @@ python-services/
 - **To add a new IPC command:** `utils/request_util.py` `send_rf_request()`, C-side `parser.c`
 - **To change campaign scheduling:** `campaign_runner.py`, `functions.py` campaign state machine
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `orchestrator.py` | ~400 | Active | Always-on, ZMQ + HTTP |
+| `campaign_runner.py` | ~200 | Active | Cron one-shot |
+| `status.py` | ~100 | Active | Timer reporter |
+| `retry_queue.py` | ~80 | Active | Upload retry |
+| `server_webrtc.py` | ~150 | Active | Opus→PCM→WebRTC bridge |
+
 ## Open questions / TODO
 - WebRTC server depends on GStreamer — not documented in requirements.txt
 - `server_webrtc.py` has complex async + threading (GLib main loop in daemon thread)

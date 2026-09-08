@@ -55,6 +55,12 @@ spectral/
 - 6 MHz channel raster snapping for Colombian digital TV
 - BER estimation assumes M-QAM modulation
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `spectral_analysis.py` | ~300 | Active | Peak detection, bandwidth, TDT |
+
 ## Open questions / TODO
 - `simple_detector.py` should either be integrated or removed
 - 2,181 lines in single file — should be decomposed

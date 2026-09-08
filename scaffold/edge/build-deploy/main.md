@@ -76,6 +76,15 @@ build-deploy/
 - Build artifacts are placed in repo root — also gitignored
 - `--no-reboot` flag keeps ltegps on old binary until manual restart
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `build.sh` | ~50 | Active | CMake build wrapper |
+| `install.sh` | ~100 | Active | Production deployment |
+| `init_sys.py` | ~150 | Active | Systemd unit generator |
+| `CMakeLists.txt` | ~80 | Active | Build configuration |
+
 ## Open questions / TODO
 - install.sh is 700+ lines — should be decomposed into functions
 - No rollback mechanism if installation fails midway

@@ -40,6 +40,12 @@ calibration/
 - Cache invalidation: `lru_cache` keyed on `(abs_path, mtime)` — re-reads CSV when file changes
 - Docker copies CSV to `/opt/ane-realtime/data/licencias.csv` — path configured via `ANE_LIC_CSV` env var
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `calibration_io.py` | ~150 | Active | License CSV read/write |
+
 ## Open questions / TODO
 - License CSV is static — no mechanism to update without rebuilding Docker image
 - No validation of CSV schema on load

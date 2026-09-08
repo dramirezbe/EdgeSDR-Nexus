@@ -1,3 +1,7 @@
+> **RAW DATA** — This file contains unstructured exploration findings.
+> For navigation, use the curated scaffold docs:
+> [INDEX.md](../INDEX.md) | [cross-references.md](./cross-references.md) | [api-contracts.md](./api-contracts.md) | [task-playbooks.md](./task-playbooks.md)
+
 # Exploration Log
 
 This file tracks raw findings during Phase 1 exploration. Each section gets its own heading.

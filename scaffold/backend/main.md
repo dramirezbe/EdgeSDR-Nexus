@@ -54,6 +54,19 @@ backend/
 - Two migration systems (SQLite legacy + PostgreSQL current)
 - ~20 ad-hoc SQL scripts at root level
 
+## File Criticality
+
+| File | Lines | Status | Imports | Notes |
+|------|-------|--------|---------|-------|
+| `src/app.ts` | ~400 | Active | Entry point | Express + HTTP + WS + timers |
+| `src/database/connection.ts` | ~80 | Active — CRITICAL | 12 | God node: every route/model imports this |
+| `src/models/Sensor.ts` | ~300 | Active | 9 | Hot path: sensor CRUD + status |
+| `src/models/SensorData.ts` | ~150 | Active | 4 | Spectrum data queries |
+| `src/websocket.ts` | ~100 | Active | 2 | WS broadcast + audio routing |
+| `src/middleware/auth.ts` | ~60 | Active | 3 | JWT validation |
+| `src/routes/sensor.ts` | ~1000 | Active | 16 endpoints | Largest route file |
+| `src/routes/management.ts` | ~600 | Active | 15 endpoints | CRUD operations |
+
 ## Open questions / TODO
 - DELETE endpoints missing auth middleware
 - No rate limiting

@@ -40,6 +40,13 @@ websocket/
 - Audio subscribers are filtered by `demodType` (AM/FM)
 - Per-sensor audio throughput logging every 1 second (frames/s, KiB/s)
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `websocket.ts` | ~100 | Active | 7 broadcast types, 2 client events |
+| `audioServer.ts` | ~150 | Active | Opus→PCM decode, separate WS path |
+
 ## Open questions / TODO
 - No WebSocket authentication — anyone can connect and receive sensor data
 - No message rate limiting — could be overwhelmed by rapid sensor data

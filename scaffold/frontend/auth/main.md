@@ -40,6 +40,15 @@ auth/
 - `loginWithAzure` sends the Azure ID token (not access token) to the backend — the backend validates it via JWKS
 - `isInitialLoad` flag prevents re-fetching user on token restore (only on first mount)
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `authConfig.ts` | ~40 | Active | Azure tenant/client IDs as fallback |
+| `AuthContext.tsx` | ~120 | Active | User, token, login, logout, isAdmin |
+| `Login.tsx` | ~80 | Active | Azure SSO + legacy form |
+| `AzureCallback.tsx` | ~40 | Active | Redirect handler |
+
 ## Open questions / TODO
 - The `@supabase/supabase-js` dependency is imported in package.json but usage is unclear — may be dead
 - No token refresh logic — tokens expire after 24h and user must re-login

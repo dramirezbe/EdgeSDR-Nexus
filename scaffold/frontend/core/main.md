@@ -40,6 +40,13 @@ core/
 - WebSocket connection is established in App.tsx when monitoring is active
 - `API_BASE_URL` auto-detects: localhost uses direct backend, production uses relative `/api` (nginx proxy)
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `App.tsx` | 1359 | Active — CRITICAL | Monolithic: all dashboard state, tab nav |
+| `Sidebar.tsx` | ~100 | Active | Navigation sidebar |
+
 ## Open questions / TODO
 - App.tsx is monolithic — should be decomposed into smaller components
 - No error boundaries for graceful error handling
