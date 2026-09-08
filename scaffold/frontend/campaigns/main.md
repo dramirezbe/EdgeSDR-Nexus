@@ -14,7 +14,7 @@ Campaign lifecycle management: create, list, view, start/stop campaigns, display
 
 ## Structure
 ```
-campaigns/
+components/                    # NOTE: flat in components/, NOT in campaigns/ subdirectory
 ├── CampaignsList.tsx         # Campaign list + status management (662 lines)
 ├── CampaignModal.tsx         # Campaign create/edit modal form
 ├── CampaignDataViewer.tsx    # Campaign measurement data viewer (1759 lines, largest component)
