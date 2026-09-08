@@ -5,7 +5,7 @@ Spectral monitoring platform for Colombia's regulatory body (regulatory body). O
 ## Quick Start
 
 1. **Understand the codebase first** — read `scaffold/INDEX.md` (the full map)
-2. **For AI agents** — see `AGENTS.md` for mandatory exploration order
+2. **For AI agents** — see `AGENTS.md` for mandatory exploration order (scaffold FIRST, grep LAST)
 3. **Platform overview** — see `README_PLATFORM.md` (Spanish)
 
 ## Architecture
@@ -50,7 +50,11 @@ Internet/Intranet :80
 | [README_PLATFORM.md](README_PLATFORM.md) | Platform overview in Spanish |
 | [scaffold/INDEX.md](scaffold/INDEX.md) | Full codebase map (all sections and sub-sections) |
 | [scaffold/_meta/manifest.json](scaffold/_meta/manifest.json) | Machine-readable scaffold index |
-| [scaffold/_meta/exploration-log.md](scaffold/_meta/exploration-log.md) | Raw exploration findings |
+| [scaffold/_meta/cross-references.md](scaffold/_meta/cross-references.md) | Section-to-section dependency map |
+| [scaffold/_meta/api-contracts.md](scaffold/_meta/api-contracts.md) | Centralized API endpoint index (43 endpoints) |
+| [scaffold/_meta/task-playbooks.md](scaffold/_meta/task-playbooks.md) | Common task decision trees |
+| [scaffold/_meta/verify-scaffold.js](scaffold/_meta/verify-scaffold.js) | Scaffold integrity checker |
+| [scaffold/_meta/exploration-log.md](scaffold/_meta/exploration-log.md) | Raw exploration findings (use scaffold instead) |
 
 ### Frontend
 
