@@ -16,7 +16,7 @@ Campaign lifecycle management: create, list, view, start/stop campaigns, display
 ```
 components/                    # NOTE: flat in components/, NOT in campaigns/ subdirectory
 ├── CampaignsList.tsx         # Campaign list + status management (662 lines)
-├── CampaignModal.tsx         # Campaign create/edit modal form
+├── CampaignModal.tsx         # Campaign create/edit modal form (1257 lines)
 ├── CampaignDataViewer.tsx    # Campaign measurement data viewer (1759 lines, largest component)
 └── ComplianceReport.tsx      # Compliance report display (~1400 lines)
 ```
@@ -46,10 +46,10 @@ components/                    # NOTE: flat in components/, NOT in campaigns/ su
 
 | File | Lines | Status | Notes |
 |------|-------|--------|-------|
-| `CampaignsList.tsx` | ~300 | Active | CRUD + start/stop campaigns |
-| `CampaignModal.tsx` | ~200 | Active | Create/edit campaign form |
-| `CampaignDataViewer.tsx` | ~350 | Active | NDJSON streaming data viewer |
-| `ComplianceReport.tsx` | ~200 | Active | Report generation + display |
+| `CampaignsList.tsx` | 662 | Active | CRUD + start/stop campaigns |
+| `CampaignModal.tsx` | 1257 | Active | Create/edit campaign form |
+| `CampaignDataViewer.tsx` | 1759 | Active | NDJSON streaming data viewer |
+| `ComplianceReport.tsx` | 1677 | Active | Report generation + display |
 
 ## Open questions / TODO
 - CampaignDataViewer is monolithic — should be split into smaller components
