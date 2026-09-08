@@ -50,7 +50,7 @@ python-services/
 - **Shared state:** `/dev/shm/persistent.json` (calibration, GPS, campaign params, locks)
 - **IQ mode (dev only):** Test scripts can send `method_psd: "iq"` via ZMQ directly to get raw complex samples; Python validation accepts "iq" in `ServerRealtimeConfig`
 - **Dry-run (dev only):** Test scripts send `dry_run: true` + `dry_run_iq: [...]` to inject synthetic IQ without HackRF
-  - Tutorial: `Edge-Node/TUTORIAL_IQ_DRY_RUN.md` — full developer guide with examples
+  - Tutorial: `Edge-Node/playground/TUTORIAL_IQ_DRY_RUN.md` — full developer guide with examples
 
 ## Key Design Patterns
 - **Global state machine:** `GlobalSys` prevents concurrent acquisitions (IDLE/REALTIME/CAMPAIGN/KALIBRATING)

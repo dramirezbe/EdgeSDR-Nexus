@@ -30,6 +30,7 @@ Edge-Node/
 ├── docs/                   # Sphinx/Doxygen documentation
 ├── json/                   # API/IPC contract schemas
 ├── context/                # Architecture docs (see context sub-section)
+├── playground/             # Testing & tutorials: PFB/dry-run/IQ scripts + developer guide
 ├── daemons/                # Generated systemd units (gitignored)
 ├── db/                     # Reference data (117,522 Colombian spectrum assignments)
 ├── orchestrator.py         # Main Python entry (see python-services)
@@ -62,6 +63,7 @@ Edge-Node/
 - Build artifacts placed in repo root, gitignored
 - No lint/typecheck/CI configured
 - All timestamps are Colombia time (UTC-5)
+- **Playground:** `playground/` contains testing scripts (PFB, dry-run IQ, live IQ) and `TUTORIAL_IQ_DRY_RUN.md` developer guide — start here for RF engine exploration
 
 ## Open questions / TODO
 - WebRTC depends on GStreamer (system dependency, not in requirements.txt)

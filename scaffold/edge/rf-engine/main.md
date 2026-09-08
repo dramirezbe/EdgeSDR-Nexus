@@ -72,7 +72,7 @@ while (keep_running):
 - **C -> Audio:** Opus TCP stream to `server_webrtc.py` on port 9000
 - **C -> Shared state:** Calibration results written to `/dev/shm/persistent.json` via `shm_add_to_persistent()`
 - **Dry-run:** Python test scripts can send `"dry_run": true` + `"dry_run_iq": [...]` to inject synthetic IQ, bypassing HackRF hardware entirely
-- **Tutorial:** `TUTORIAL_IQ_DRY_RUN.md` — step-by-step developer guide for IQ and dry-run modes
+- **Tutorial:** `playground/TUTORIAL_IQ_DRY_RUN.md` — step-by-step developer guide for IQ and dry-run modes
 
 ## Key Design Patterns
 - Lock-free ring buffer for hot path (rx_callback -> consumers)
@@ -95,6 +95,7 @@ while (keep_running):
 - **To change PSD algorithm:** `psd.c` — `welch_init/execute` and `pfb_init/execute` are separate functions
 - **To add a new demodulation mode:** `datatypes.h` `Demod_type` enum, `parser.c` demod lookup, `rf.c` demodulation block (lines ~1178–1210)
 - **To change JSON contracts:** edit `json/rf-engine/params.jsonc` (request) or `json/POST-data.jsonc` (response), then update `parser.c` and `publish_results()`/`publish_iq_results()` in `rf.c`
+- **To test changes:** `playground/01_pfb_request.py` (PSD), `playground/02_dry_run_iq.py` (dry-run IQ), `playground/03_live_iq.py` (live IQ)
 
 ## Open questions / TODO
 - `am_radio.h`/`am_radio.c` is legacy, superseded by `am_radio_local` but still referenced in audio thread
