@@ -2,7 +2,7 @@
 
 > Parent: [../INDEX.md](../INDEX.md)
 > Children: (none — no sub-sections)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Docker orchestration, nginx reverse proxy, and deployment/backup scripts for the regulatory body platform. Production target: single Debian server at `rsm.ane.gov.co`.

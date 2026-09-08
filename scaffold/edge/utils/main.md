@@ -1,7 +1,7 @@
 # Utils — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Shared Python utilities: IPC communication with C engine, shared memory management, system status collection, DC spike detection/removal, and DSP primitives.

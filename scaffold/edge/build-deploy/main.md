@@ -1,7 +1,7 @@
 # Build & Deploy — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Build system and deployment: CMake compilation of C binaries, production installation script, systemd unit generation, and dependency management.

@@ -2,7 +2,7 @@
 
 > Parent: [../INDEX.md](../INDEX.md)
 > Children: [rf-engine](./rf-engine/main.md), [python-services](./python-services/main.md), [utils](./utils/main.md), [build-deploy](./build-deploy/main.md), [gps-lte](./gps-lte/main.md), [context](./context/main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Raspberry Pi 5 sensor node: hybrid C99 data plane (HackRF One SDR control, real-time DSP, Opus audio) + Python 3.11+ control plane (orchestration, campaign scheduling, WebRTC, status reporting).

@@ -1,7 +1,7 @@
 # RF Engine — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 C99 real-time data plane: controls HackRF One SDR, ingests IQ samples, applies DSP (PSD, filtering, demodulation), and serves spectral data over ZMQ IPC with concurrent Opus audio streaming. Supports three `method_psd` modes: `welch` (default), `pfb`, and `iq` (raw complex samples). Also supports `dry_run` mode for injecting synthetic IQ vectors without hardware.
@@ -66,9 +66,13 @@ while (keep_running):
 
 ## Key interactions
 - **Python -> C:** ZMQ REQ/REP over `ipc:///tmp/rf_engine` — Python sends JSON config, C replies with PSD JSON (or IQ JSON when `method_psd: "iq"`)
+  - Request contract: `json/rf-engine/params.jsonc` — all fields, types, defaults
+  - Response contract (PSD): `json/POST-data.jsonc` — `Pxx`, `excursion_hz`, `depth`
+  - Response contract (IQ): `json/POST-data.jsonc` — `mode: "iq"`, `iq[]`, `n_samples`
 - **C -> Audio:** Opus TCP stream to `server_webrtc.py` on port 9000
 - **C -> Shared state:** Calibration results written to `/dev/shm/persistent.json` via `shm_add_to_persistent()`
 - **Dry-run:** Python test scripts can send `"dry_run": true` + `"dry_run_iq": [...]` to inject synthetic IQ, bypassing HackRF hardware entirely
+- **Tutorial:** `TUTORIAL_IQ_DRY_RUN.md` — step-by-step developer guide for IQ and dry-run modes
 
 ## Key Design Patterns
 - Lock-free ring buffer for hot path (rx_callback -> consumers)
@@ -79,13 +83,18 @@ while (keep_running):
 - Atomic signaling for cross-thread flags
 
 ## Common tasks & gotchas
-- **Never degrade RF parameters** requested by server — user config is source of truth
+- **Never degrade RF parameters** requested by server — user config is source of truth (`rf.c` -> `parse_config_rf`)
 - **OpenMP + thread-local storage** is a known hazard — be defensive in parallel regions
 - `rx_callback` runs in HackRF driver thread — must be minimal (no malloc, no blocking)
 - PPM correction applied to center frequency internally, but nominal frequency preserved for reporting
 - 15-minute idle timeout closes HackRF to save power/thermal
 - **IQ mode** (`method_psd: "iq"`): skips PSD, returns raw complex interleaved `[I0,Q0,...]`. Ring buffer sizing still uses `find_params_psd()` — PSD config values computed but unused
+  - **To add a new IQ-side feature:** `rf.c` `publish_iq_results()`, `datatypes.h` (response fields), `json/POST-data.jsonc` (contract)
 - **Dry-run** (`dry_run: true`): injects IQ via `dry_run_iq` array, gates all hardware operations. Memory: `dry_run_iq` is heap-allocated by parser, freed after each DSP cycle. `set_default_config()` also frees as safety net against leaks
+  - **To modify dry-run behavior:** `parser.c` `parse_config_rf()`, `rf.c` dry-run injection block (lines ~1137–1149)
+- **To change PSD algorithm:** `psd.c` — `welch_init/execute` and `pfb_init/execute` are separate functions
+- **To add a new demodulation mode:** `datatypes.h` `Demod_type` enum, `parser.c` demod lookup, `rf.c` demodulation block (lines ~1178–1210)
+- **To change JSON contracts:** edit `json/rf-engine/params.jsonc` (request) or `json/POST-data.jsonc` (response), then update `parser.c` and `publish_results()`/`publish_iq_results()` in `rf.c`
 
 ## Open questions / TODO
 - `am_radio.h`/`am_radio.c` is legacy, superseded by `am_radio_local` but still referenced in audio thread

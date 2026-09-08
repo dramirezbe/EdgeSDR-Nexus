@@ -1,7 +1,7 @@
 # Audio — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Real-time audio streaming: WebRTC-based audio player for demodulated AM/FM signals from sensors, plus legacy audio players.

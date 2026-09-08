@@ -1,7 +1,7 @@
 # Campaigns — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Campaign lifecycle management: create, list, view, start/stop campaigns, display campaign data, and generate compliance reports.

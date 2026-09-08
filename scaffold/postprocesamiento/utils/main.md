@@ -1,7 +1,7 @@
 # Utils — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Low-level DSP utilities: PSD smoothing, noise floor estimation, channel detection, region analysis, and visualization helpers.

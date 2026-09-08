@@ -1,7 +1,7 @@
 # Auth — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Handles user authentication: Azure AD SSO (primary), legacy username/password login, JWT token management, and auth state propagation via React Context.

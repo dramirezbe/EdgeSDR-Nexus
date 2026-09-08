@@ -1,7 +1,7 @@
 # GPS/LTE — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 C99 GPS and LTE modules: acquires GPS location data and LTE signal information for sensor positioning and connectivity monitoring.

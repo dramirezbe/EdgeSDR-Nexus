@@ -1,7 +1,7 @@
 # WebSocket — Layer 2
 
 > Parent: [../main.md](../main.md)
-> Last audited: 2026-08-31 @ commit dc6c386
+> Last audited: 2026-09-08 @ commit 2bcb560
 
 ## Purpose
 Real-time communication layer: main WebSocket for sensor data/status/GPS broadcasts, and audio WebSocket for Opus-to-PCM decoding and streaming.
