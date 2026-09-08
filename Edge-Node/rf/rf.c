@@ -1333,6 +1333,7 @@ int main() {
     RB_cfg_t local_rb;
     PsdConfig_t local_psd;
     DesiredCfg_t local_desired;
+    memset(&local_desired, 0, sizeof(local_desired));
     static struct timespec last_psd_run = {0};
 
     while (keep_running) {

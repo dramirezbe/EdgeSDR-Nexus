@@ -1,0 +1,116 @@
+# docker-compose.local.yml
+# Local development stack — PostgreSQL included, no external deps.
+#
+# Usage:
+#   docker compose -f docker-compose.local.yml up --build
+#
+# Services:
+#   postgres        - PostgreSQL 16 (port 5432)
+#   python-analysis - Spectral analysis microservice (port 8000)
+#   backend         - Node.js API + WebSocket (port 3000)
+#   frontend        - React SPA via nginx (port 80)
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: ane-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: ane_db
+      POSTGRES_USER: ane_user
+      POSTGRES_PASSWORD: local_dev_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - ane-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ane_user -d ane_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  python-analysis:
+    build:
+      context: ./postprocesamiento
+      dockerfile: Dockerfile
+    container_name: ane-python-analysis
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - ANE_LIC_CSV=/opt/ane-realtime/data/licencias.csv
+    networks:
+      - ane-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: ane-backend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - PORT=3000
+      - DB_TYPE=postgresql
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_NAME=ane_db
+      - DB_USER=ane_user
+      - DB_PASSWORD=local_dev_password
+      - PYTHON_SERVICE_URL=http://python-analysis:8000
+    volumes:
+      - ./backend/data:/app/data
+      - ./backend/logs:/app/logs
+    networks:
+      - ane-network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      python-analysis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_URL=/api
+        - VITE_WS_URL=/ws
+    container_name: ane-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    networks:
+      - ane-network
+    depends_on:
+      - backend
+    healthcheck:
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  ane-network:
+    driver: bridge
+
+volumes:
+  pgdata:
