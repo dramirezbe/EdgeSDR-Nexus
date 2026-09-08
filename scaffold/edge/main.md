@@ -65,6 +65,19 @@ Edge-Node/
 - All timestamps are Colombia time (UTC-5)
 - **Playground:** `playground/` contains testing scripts (PFB, dry-run IQ, live IQ) and `TUTORIAL_IQ_DRY_RUN.md` developer guide — start here for RF engine exploration
 
+## File Criticality
+
+| File | Lines | Status | Imports | Notes |
+|------|-------|--------|---------|-------|
+| `cfg.py` | ~200 | Active — CRITICAL | ~10 | God node: every Python file imports this |
+| `orchestrator.py` | ~400 | Active | Entry point | Always-on control plane |
+| `functions.py` | ~300 | Active | 2 | State machine + campaign scheduling |
+| `utils/request_util.py` | ~100 | Active | 4 | HTTP client for backend |
+| `utils/io_util.py` | ~80 | Active | 4 | File I/O utilities |
+| `rf/rf.c` | ~1200 | Active | Entry point | C99 RF engine main loop |
+| `rf/libs/psd.c` | ~400 | Active | PSD engine (Welch + PFB) |
+| `benchmarking.py` | ~200 | DEAD | 0 | Standalone profiling, not used in production |
+
 ## Open questions / TODO
 - WebRTC depends on GStreamer (system dependency, not in requirements.txt)
 - No unit tests for C or Python code

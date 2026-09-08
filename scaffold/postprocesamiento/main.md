@@ -52,6 +52,19 @@ postprocesamiento/
 - No `.dockerignore` — test files baked into production image
 - No version pinning — fragile for production
 
+## File Criticality
+
+| File | Lines | Status | Imports | Notes |
+|------|-------|--------|---------|-------|
+| `src/processor.py` | ~400 | Active | 2 | Central orchestrator, mode routing |
+| `src/spectral_analysis.py` | ~300 | Active | 1 | Peak detection, bandwidth, noise floor |
+| `src/calibration_io.py` | ~150 | Active | 1 | License CSV I/O |
+| `src/server_flask.py` | ~100 | Active | 1 | Flask HTTP server |
+| `src/simple_detector.py` | ~200 | DEAD | 0 | Imported but never called in production |
+| `src/utils/io_visualization.py` | ~100 | DEAD | 0 | Expects different JSON schema |
+| `step1_test_payload.py` | ~50 | DEAD | 0 | Test file, no production import |
+| `step2_test_router.py` | ~80 | DEAD | 0 | Near-duplicate of main.py |
+
 ## Open questions / TODO
 - Should decompose processor.py (2,542 lines) into smaller modules
 - Remove dead code (legacy pipeline, simple_detector, io_visualization)

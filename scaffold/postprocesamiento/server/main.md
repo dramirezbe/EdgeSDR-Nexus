@@ -42,6 +42,12 @@ server/
 - `VERBOSE_LOGS` env var controls server logging (default: enabled)
 - Batch mode uses `max_workers` (default 8, max 32) — should match gunicorn workers
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `server_flask.py` | ~100 | Active | Flask app: /health, /analyze, /analyze_batch |
+
 ## Open questions / TODO
 - No request validation beyond basic type checks
 - No rate limiting or authentication

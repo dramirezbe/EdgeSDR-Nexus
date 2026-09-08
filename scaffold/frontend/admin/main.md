@@ -35,6 +35,13 @@ admin/
 - System configuration includes: max_monitoring_time_min, center_freq_tolerance_khz, bandwidth_tolerance_khz
 - Sensor CRUD is in App.tsx directly, not in a separate component
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `AntennaManagement.tsx` | ~200 | Active | Antenna CRUD |
+| `UserManagement.tsx` | ~150 | Active | User CRUD (admin only) |
+
 ## Open questions / TODO
 - Sensor management code is embedded in App.tsx (1359 lines) — should be extracted to a dedicated component
 - No bulk operations for antennas or users

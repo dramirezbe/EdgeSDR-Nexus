@@ -69,6 +69,12 @@ _enrich_output_with_rni()  -- Add RNI field strength + occupancy
 - Three processing modes have different output structures — `all_emissions` is simplest, `compliance` is most complex
 - Colombia-specific logic: TDT band detection (470-698 MHz), 6 MHz raster channel snapping, DANE code filtering
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `processor.py` | ~400 | Active | Central orchestrator: mode routing, pipeline |
+
 ## Open questions / TODO
 - Legacy `_process_input_reference_legacy()` should be removed or clearly marked deprecated
 - `simple_detector.py` integration is incomplete — never invoked in production

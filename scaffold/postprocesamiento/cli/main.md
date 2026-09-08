@@ -33,6 +33,12 @@ cli/
 - `parse_picos_arg` and `parse_danes_arg` are copy-pasted here too — 3rd copy
 - If `--cumplimiento 0` and no `--picos`, license CSV is ignored (all_emissions mode)
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `main.py` | ~100 | Active | CLI entry point for local analysis |
+
 ## Open questions / TODO
 - `step2_test_router.py` should be deleted or refactored to use main.py
 - No `--output` flag for file output

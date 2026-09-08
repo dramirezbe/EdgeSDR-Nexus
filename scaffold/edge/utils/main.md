@@ -73,6 +73,14 @@ utils/
 - DC spike removal has two reconstruction strategies — choice depends on detector's `termination_mode`
 - All file writes must go through `atomic_write_bytes` — never write directly
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `request_util.py` | ~100 | Active | 4 imports, HTTP client |
+| `io_util.py` | ~80 | Active | 4 imports, file I/O |
+| `shared_memory.py` | ~60 | Active | /dev/shm access |
+
 ## Open questions / TODO
 - `benchmarking.py` should be moved to tools/ or removed
 - No retry logic in `RequestClient` — caller must handle retries

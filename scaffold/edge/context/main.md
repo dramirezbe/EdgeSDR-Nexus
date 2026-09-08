@@ -55,6 +55,12 @@ context/
 - `AGENTS.md` at Edge-Node root is the primary entry point for AI agents
 - `context/` docs provide deeper dives into specific modules
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| Architecture docs | — | Active | Reference materials only |
+
 ## Open questions / TODO
 - Some docs may be stale — last audit date not tracked
 - No index or navigation between context docs

@@ -1,6 +1,11 @@
 {
   "generated_at": "2026-08-31T00:00:00Z",
   "commit": "2bcb560",
+  "refresh_policy": {
+    "cadence": "on major refactor or new section",
+    "stale_after_commits": 50,
+    "verification_command": "node scaffold/_meta/verify-scaffold.js"
+  },
   "sections": [
     {
       "path": "scaffold/frontend/main.md",

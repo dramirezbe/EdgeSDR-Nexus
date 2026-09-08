@@ -40,6 +40,14 @@ management-api/
 - CORS is wide open (`cors()` with no config) — any origin can call the API
 - Alert deduplication: `shouldCreateAlert()` prevents same alert type within configurable timeout (30min default)
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `management.ts` | ~600 | Active | 15 endpoints, 3 DELETE missing auth |
+| `auth.ts` | ~300 | Active | 8 endpoints, Azure JWKS validation |
+| `config.ts` | ~100 | Active | 2 endpoints, both missing auth |
+
 ## Open questions / TODO
 - Missing auth on DELETE endpoints is a security vulnerability
 - No rate limiting on any endpoint

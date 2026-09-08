@@ -38,6 +38,13 @@ audio/
 - PCM sample rate: 48kHz mono, 20ms frames (960 samples)
 - Three audio player implementations exist — WebRTC is the current one, others are legacy
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `AudioPlayer.tsx` | ~100 | Active | WebSocket audio playback |
+| `WebRTCAudioPlayer.tsx` | ~150 | Active | WebRTC audio via server_webrtc |
+
 ## Open questions / TODO
 - Legacy AudioPlayer and AudioPlayerComponent may be dead code — need to verify if they're still used
 - No audio recording or playback from history

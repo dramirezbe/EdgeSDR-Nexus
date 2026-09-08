@@ -60,6 +60,19 @@ frontend/
 - Two dead `.bak` files in components (SpectrumChart.canvas, Waterfall.canvas)
 - No testing framework configured
 
+## File Criticality
+
+| File | Lines | Status | Imports | Notes |
+|------|-------|--------|---------|-------|
+| `src/App.tsx` | 1359 | Active — needs decomposition | 9 (api.ts, AuthContext, hooks) | Hot path: all dashboard state lives here |
+| `src/services/api.ts` | ~400 | Active | 9 (all components) | God node: every component imports this |
+| `src/contexts/AuthContext.tsx` | ~120 | Active | 2 (main.tsx, App.tsx) | Auth state for entire app |
+| `src/hooks/useSpectrumData.ts` | ~80 | Active | 1 (App.tsx) | Polling hook for realtime spectrum |
+| `src/authConfig.ts` | ~40 | Active | 1 (main.tsx) | Azure AD MSAL config |
+| `src/main.tsx` | ~60 | Active | Entry point | MSAL init + BrowserRouter |
+| `src/components/SpectrumChart.canvas.tsx.bak` | — | DEAD | 0 | Safe to delete |
+| `src/components/Waterfall.canvas.tsx.bak` | — | DEAD | 0 | Safe to delete |
+
 ## Open questions / TODO
 - `@supabase/supabase-js` dependency — usage unclear, may be dead
 - No error boundaries for graceful error handling

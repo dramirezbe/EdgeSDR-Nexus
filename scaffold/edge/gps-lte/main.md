@@ -37,6 +37,12 @@ gps-lte/
 - Binary placed in repo root by `build.sh`, gitignored
 - GPS coordinates used for sensor location tracking on frontend map
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `gps-lte.c` | ~400 | Active | GPS + LTE modules |
+
 ## Open questions / TODO
 - GPS module details not fully documented in context/
 - LTE module purpose unclear — may be for connectivity monitoring only

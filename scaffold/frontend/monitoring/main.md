@@ -41,6 +41,16 @@ monitoring/
 - `cacheScopeKey` combines sensor MAC + preset to clear spectrum cache on scope changes
 - Demodulation metrics (excursion_hz, depth) come from polling data, not WebSocket
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `MonitoringNetwork.tsx` | ~300 | Active | Sensor map + status + antenna assignment |
+| `ConfigurationPanel.tsx` | ~200 | Active | Sensor config + start/stop monitoring |
+| `SpectrumChart.tsx` | ~250 | Active | Plotly spectrum visualization |
+| `Waterfall.tsx` | ~200 | Active | Waterfall display |
+| `AlertsPanel.tsx` | ~150 | Active | Alert history + validate-status |
+
 ## Open questions / TODO
 - No WebSocket-based spectrum streaming (polling only) — may cause latency on slow networks
 - Waterfall max 200 rows, oldest trimmed automatically

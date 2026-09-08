@@ -66,6 +66,15 @@ database/
 - Legacy SQLite migration (`migrate.ts`) is dead code — excluded from tsconfig build
 - ~20 ad-hoc SQL scripts at root level — no proper migration system
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `Sensor.ts` | ~300 | Active | 9 imports, CRUD + status validation |
+| `SensorData.ts` | ~150 | Active | 4 imports, spectrum data queries |
+| `Antenna.ts` | ~100 | Active | 2 imports, antenna CRUD |
+| `SensorHistoryAlert.ts` | ~80 | Active | 2 imports, alert history |
+
 ## Open questions / TODO
 - Inconsistent time representation (BIGINT vs TIMESTAMP) across schema
 - No migration versioning system — ad-hoc scripts are fragile

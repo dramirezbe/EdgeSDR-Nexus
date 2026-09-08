@@ -32,6 +32,12 @@ network/
 - Status validation is called on tab switch to ensure fresh status
 - The component handles its own sensor list loading independently from App.tsx
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `SensorMap.tsx` | ~200 | Active | Leaflet map with sensor markers |
+
 ## Open questions / TODO
 - No clustering for dense sensor areas
 - No sensor detail view (only popup with name/description)

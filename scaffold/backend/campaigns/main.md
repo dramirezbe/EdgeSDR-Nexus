@@ -38,6 +38,12 @@ campaigns/
 - `requireAdmin` middleware on delete and stop operations
 - Dynamic import `require('../models/Sensor')` used to avoid circular dependency — architectural smell
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `campaign.ts` | ~900 | Active | 12 endpoints, dynamic require for Sensor model |
+
 ## Open questions / TODO
 - Campaign data query (`/:id/data`) requires both campaignId and sensorMac — could be simplified
 - No real-time campaign progress updates to frontend

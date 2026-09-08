@@ -62,6 +62,13 @@ utils/
 - `region_analysis.py` at 850 lines is the largest utility — handles complex region splitting logic
 - All functions are stateless — no shared state between calls
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `io_visualization.py` | ~100 | DEAD | Wrong JSON schema |
+| Other utils | — | Active | Smoothing, noise floor, channel detection |
+
 ## Open questions / TODO
 - `io_visualization.py` should be removed or moved to a separate notebook/tools directory
 - No unit tests for any utility functions

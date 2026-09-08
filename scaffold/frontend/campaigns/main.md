@@ -42,6 +42,15 @@ campaigns/
 - NDJSON streaming available for large campaign data sets (`/api/campaigns/sensor/:mac/signals`)
 - Compliance report calls Python microservice via backend — may take 10+ seconds
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `CampaignsList.tsx` | ~300 | Active | CRUD + start/stop campaigns |
+| `CampaignModal.tsx` | ~200 | Active | Create/edit campaign form |
+| `CampaignDataViewer.tsx` | ~350 | Active | NDJSON streaming data viewer |
+| `ComplianceReport.tsx` | ~200 | Active | Report generation + display |
+
 ## Open questions / TODO
 - CampaignDataViewer is monolithic — should be split into smaller components
 - No real-time campaign progress updates (requires manual refresh)

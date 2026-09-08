@@ -97,6 +97,17 @@ while (keep_running):
 - **To change JSON contracts:** edit `json/rf-engine/params.jsonc` (request) or `json/POST-data.jsonc` (response), then update `parser.c` and `publish_results()`/`publish_iq_results()` in `rf.c`
 - **To test changes:** `playground/01_pfb_request.py` (PSD), `playground/02_dry_run_iq.py` (dry-run IQ), `playground/03_live_iq.py` (live IQ)
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `rf.c` | ~1200 | Active — CRITICAL | Main loop, state machine, DSP orchestration |
+| `libs/datatypes.h` | ~200 | Active | Central type registry |
+| `libs/psd.c` | ~400 | Active | Welch + PFB PSD engines |
+| `libs/ring_buffer.{c,h}` | ~200 | Active | Lock-free SPSC, hot path |
+| `libs/sdr_HAL.{c,h}` | ~300 | Active | HackRF abstraction |
+| `libs/parser.{c,h}` | ~200 | Active | JSON config deserializer |
+
 ## Open questions / TODO
 - `am_radio.h`/`am_radio.c` is legacy, superseded by `am_radio_local` but still referenced in audio thread
 - No unit tests for C code

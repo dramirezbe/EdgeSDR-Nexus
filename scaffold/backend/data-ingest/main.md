@@ -35,6 +35,12 @@ data-ingest/
 - `POST /api/sensor/:mac/stop` broadcasts stop command AND resets configuration
 - Auto-stop monitoring: `setInterval` checks if monitoring has exceeded max time
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `sensor.ts` | ~1000 | Active | 16 endpoints, auto-stop timers, campaign ID detection |
+
 ## Open questions / TODO
 - No authentication on sensor-facing endpoints (by design — physical sensors can't carry JWT)
 - `pxx` column stores FFT arrays as TEXT (stringified JSON), not native PostgreSQL array

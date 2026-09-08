@@ -40,6 +40,12 @@ reports/
 - 1-hour server timeout (`server.setTimeout(3600000)`) specifically for long-running reports
 - `GET /api/reports/ping` is a health check endpoint for the Python service
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `reports.ts` | ~300 | Active | 3 endpoints, calls Python + geolocation |
+
 ## Open questions / TODO
 - No auth on report endpoints — anyone can generate reports
 - No retry logic for external service calls

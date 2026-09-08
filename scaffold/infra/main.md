@@ -71,6 +71,16 @@ Docker orchestration, nginx reverse proxy, and deployment/backup scripts for the
 - **No TLS/SSL** — port 80 exposed directly
 - **Python service port 8000 exposed to host** — should be internal only
 
+## File Criticality
+
+| File | Lines | Status | Notes |
+|------|-------|--------|-------|
+| `docker-compose.yml` | ~100 | Active | 3 services, primary orchestration |
+| `deploy-server.sh` | ~200 | Active — STALE | References SQLite, needs update |
+| `backup-production.sh` | ~50 | Active | Destructive archive + delete |
+| `Dockerfile` (root) | ~30 | DEAD | Orphaned, not referenced by compose |
+| `nginx.conf` (root) | ~40 | DEAD | Stale, frontend/nginx.conf is active |
+
 ## Open questions / TODO
 - Deploy script needs update for PostgreSQL architecture
 - Add .dockerignore for postprocesamiento
