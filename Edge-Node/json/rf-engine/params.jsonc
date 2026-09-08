@@ -3,7 +3,7 @@
   // When true, the engine performs calibration and ignores the normal PSD fields.
   "calibrate": false,
 
-  // Can be "pfb" or "welch".
+  // Can be "pfb", "welch", or "iq".
   "method_psd": "pfb",
 
   "center_freq_hz": 98000000,
@@ -26,5 +26,10 @@
   "filter": {
     "start_freq_hz": 97500000,
     "end_freq_hz": 98500000
-  }
+  },
+
+  // Optional dry-run mode: bypass HackRF hardware and inject IQ vector.
+  "dry_run": false,
+  // Interleaved IQ vector [I0, Q0, I1, Q1, ...]. Length must be even.
+  "dry_run_iq": []
 }

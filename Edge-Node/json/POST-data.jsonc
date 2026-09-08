@@ -6,7 +6,14 @@
     "campaign_id": 123,
 
     // Array of Power Spectral Density data in dBm/Hz.
+    // Present in PSD mode (welch/pfb), absent in IQ mode.
     "Pxx": [-0.54, -0.43, -1.56],
+
+    // IQ mode response (when method_psd="iq"):
+    // "mode": "iq",
+    // "n_samples": 4000000,
+    // "sample_rate_hz": 8000000,
+    // "iq": [0.123, -0.456, 0.789, ...],
 
     // Spectrum bounds in Hz.
     "start_freq_hz": 88000000,

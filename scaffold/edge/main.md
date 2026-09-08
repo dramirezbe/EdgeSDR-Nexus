@@ -52,7 +52,7 @@ Edge-Node/
 
 ## Key interactions
 - **Sensors -> Backend:** POST status/gps/data, GET realtime/campaigns (via Python HTTP client)
-- **Python -> C:** ZMQ REQ/REP (send config, receive PSD)
+- **Python -> C:** ZMQ REQ/REP (send config, receive PSD or IQ depending on `method_psd`)
 - **C -> Audio:** Opus TCP to port 9000 -> server_webrtc.py -> GStreamer -> WebRTC -> browser
 - **Shared state:** `/dev/shm/persistent.json` (calibration, GPS, campaign params, locks)
 

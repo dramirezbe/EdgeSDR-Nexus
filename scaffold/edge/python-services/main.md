@@ -37,13 +37,15 @@ python-services/
 
 ## Key interactions
 - **Orchestrator -> Backend:** `GET /api/sensor/:mac/realtime` (poll config), `GET /api/sensor/:mac/campaigns` (poll campaigns)
-- **Orchestrator -> C engine:** ZMQ REQ/REP (send config, receive PSD)
+- **Orchestrator -> C engine:** ZMQ REQ/REP (send config, receive PSD — orchestrator hardcodes `method_psd: "pfb"`)
 - **Orchestrator -> Backend:** `POST /api/sensor/data` (upload spectrum), `POST /api/sensor/status` (upload status)
 - **Campaign runner -> Backend:** `POST /api/sensor/data` (upload with campaign_id)
 - **Campaign runner -> C engine:** ZMQ REQ/REP (acquire spectrum)
 - **Status reporter -> Backend:** `POST /api/sensor/status` (hardware metrics)
 - **WebRTC -> C engine:** TCP :9000 (Opus frames) -> GStreamer -> WebRTC -> browser
 - **Shared state:** `/dev/shm/persistent.json` (calibration, GPS, campaign params, locks)
+- **IQ mode (dev only):** Test scripts can send `method_psd: "iq"` via ZMQ directly to get raw complex samples; Python validation accepts "iq" in `ServerRealtimeConfig`
+- **Dry-run (dev only):** Test scripts send `dry_run: true` + `dry_run_iq: [...]` to inject synthetic IQ without HackRF
 
 ## Key Design Patterns
 - **Global state machine:** `GlobalSys` prevents concurrent acquisitions (IDLE/REALTIME/CAMPAIGN/KALIBRATING)
