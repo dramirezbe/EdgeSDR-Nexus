@@ -1,9 +1,13 @@
 """
-02 — Dry-run IQ mode
+02 — Dry-run modes
 
 Inject a synthetic two-tone signal into the RF engine via dry-run mode.
-No HackRF needed — the engine skips all hardware operations and returns
-raw complex IQ samples through the same DSP pipeline.
+No HackRF needed — the engine skips all hardware operations.
+
+Demonstrates all 3 processing paths:
+  1. IQ mode   → raw complex samples (binary, int8)
+  2. Welch PSD → power spectral density via Welch's method
+  3. PFB PSD   → power spectral density via polyphase filterbank
 
 Requires: RF engine running (./rf_app).
 
@@ -46,17 +50,12 @@ def generate_iq(fs: int, n: int) -> list:
     return iq
 
 
-async def run():
-    # ── Generate signal ───────────────────────────────────────────────
-    iq_data = generate_iq(SAMPLE_RATE, N_SAMPLES)
-    print(f"Generated {N_SAMPLES} IQ samples ({FREQ_1} Hz + {FREQ_2} Hz tones)")
-    print(f"  Payload estimate: ~{N_SAMPLES * 2 * 10 / 1e6:.1f} MB JSON")
-
-    # ── Send dry-run request ──────────────────────────────────────────
-    payload = {
-        "center_freq_hz": 98_000_000,    # 98 MHz
+def build_payload(method_psd: str, iq_data: list) -> dict:
+    """Build a dry-run payload for the given processing mode."""
+    return {
+        "center_freq_hz": 98_000_000,
         "sample_rate_hz": SAMPLE_RATE,
-        "method_psd": "iq",              # IQ mode — raw complex samples
+        "method_psd": method_psd,
         "demodulation": None,
         "lna_gain": 0,
         "vga_gain": 0,
@@ -65,66 +64,121 @@ async def run():
         "cooldown_request": 0.0,
         "ppm_error": 0.0,
         "filter": None,
-        "dry_run": True,                 # bypass HackRF
-        "dry_run_iq": iq_data,           # inject synthetic IQ
+        "dry_run": True,
+        "dry_run_iq": iq_data,
     }
 
-    async with ZmqPairController(IPC_ADDR, is_server=True, max_queue=-1) as ctrl:
-        print(f"\nSending dry-run IQ request to {IPC_ADDR} ...")
-        try:
-            resp = await ctrl.request(payload)
-        except TimeoutError:
-            print("ERROR: Timeout — no RF engine running?")
-            return
 
-    if resp is None:
-        print("ERROR: No response (timeout)")
-        return
+async def send(payload: dict) -> dict | None:
+    """Send a request to the RF engine and return the response."""
+    try:
+        async with ZmqPairController(IPC_ADDR, is_server=True, max_queue=-1) as ctrl:
+            return await ctrl.request(payload)
+    except TimeoutError:
+        return None
 
-    # ── Response ──────────────────────────────────────────────────────
-    if resp.get("status") != "ok":
-        print(f"ERROR: {resp}")
+
+# ── 1. IQ mode ───────────────────────────────────────────────────────
+async def demo_iq(iq_data: list):
+    """Dry-run IQ mode: returns raw complex samples as binary."""
+    print("\n═══ IQ Mode (raw complex samples) ═══")
+    resp = await send(build_payload("iq", iq_data))
+
+    if resp is None or resp.get("status") != "ok":
+        print(f"  ERROR: {resp}")
         return
 
     iq_out = resp.get("iq", [])
     n_out = int(resp.get("n_samples", 0))
     fs = resp.get("sample_rate_hz", 0)
-    start_mhz = resp.get("start_freq_hz", 0) / 1e6
-    end_mhz = resp.get("end_freq_hz", 0) / 1e6
 
-    print(f"\n--- Dry-Run IQ Result ---")
-    print(f"  Mode:       {resp.get('mode', '?')}")
-    print(f"  Band:       {start_mhz:.2f} – {end_mhz:.2f} MHz")
-    print(f"  Fs:         {fs / 1e6:.1f} MS/s")
-    print(f"  Samples:    {n_out} complex ({len(iq_out)} values)")
-    print(f"  Encoding:   {'int8 binary' if resp.get('encoding') == 0 else 'unknown'}")
+    print(f"  Band:     {resp.get('start_freq_hz', 0)/1e6:.2f} – {resp.get('end_freq_hz', 0)/1e6:.2f} MHz")
+    print(f"  Fs:       {fs/1e6:.1f} MS/s")
+    print(f"  Samples:  {n_out} complex ({len(iq_out)} values)")
+    print(f"  Encoding: {'int8 binary' if resp.get('encoding') == 0 else 'unknown'}")
 
     if len(iq_out) == 0:
         print("  No IQ data received.")
         return
 
-    # ── Show first samples ────────────────────────────────────────────
-    print(f"\n  First 6 values: {iq_out[:6]}")
-    print(f"  Reconstructed complex samples:")
+    # Show first samples
+    print(f"  First 6:  {iq_out[:6]}")
     for j in range(min(3, n_out)):
-        re = iq_out[2 * j]
-        im = iq_out[2 * j + 1]
+        re, im = iq_out[2*j], iq_out[2*j+1]
         print(f"    [{j}] = {re:.1f} + {im:.1f}j  (|z| = {math.hypot(re, im):.1f})")
 
-    # ── Quick PSD analysis ────────────────────────────────────────────
-    reals = np.array(iq_out[0::2], dtype=np.float64)
-    imags = np.array(iq_out[1::2], dtype=np.float64)
-    c = reals + 1j * imags
 
-    nperseg = min(1024, len(c))
-    freqs, psd = welch(c, fs=fs, nperseg=nperseg, return_onesided=False)
-    freqs = np.fft.fftshift(freqs)
-    psd = np.fft.fftshift(psd)
-    freqs_khz = freqs / 1e3
+# ── 2. Welch PSD ─────────────────────────────────────────────────────
+async def demo_welch(iq_data: list):
+    """Dry-run Welch PSD: engine computes PSD via Welch's method."""
+    print("\n═══ Welch PSD ═══")
+    resp = await send(build_payload("welch", iq_data))
 
-    print(f"\n--- Welch PSD (nperseg={nperseg}) ---")
-    print(f"  Max PSD:  {10*np.log10(psd.max()):.1f} dB @ {freqs_khz[np.argmax(psd)]:.1f} kHz")
-    print(f"  Mean PSD: {10*np.log10(psd.mean()):.1f} dB")
+    if resp is None or resp.get("status") != "ok":
+        print(f"  ERROR: {resp}")
+        return
+
+    pxx = resp.get("Pxx", [])
+    print(f"  Band:     {resp.get('start_freq_hz', 0)/1e6:.2f} – {resp.get('end_freq_hz', 0)/1e6:.2f} MHz")
+    print(f"  Pxx bins: {len(pxx)}")
+
+    if len(pxx) > 0:
+        pxx_arr = np.array(pxx)
+        print(f"  Range:    [{pxx_arr.min():.1f}, {pxx_arr.max():.1f}] dB")
+        print(f"  Mean:     {pxx_arr.mean():.1f} dB")
+
+        # Find top peaks
+        freqs = np.linspace(0, SAMPLE_RATE / 2, len(pxx))
+        from scipy.signal import find_peaks
+        peaks, props = find_peaks(pxx, prominence=3)
+        if len(peaks) > 0:
+            top = np.argsort(props["prominences"])[::-1][:3]
+            print("  Top peaks:")
+            for rank, idx in enumerate(top, 1):
+                pk = peaks[idx]
+                print(f"    {rank}. {freqs[pk]:8.1f} Hz  {pxx[pk]:6.1f} dB")
+
+
+# ── 3. PFB PSD ───────────────────────────────────────────────────────
+async def demo_pfb(iq_data: list):
+    """Dry-run PFB PSD: engine computes PSD via polyphase filterbank."""
+    print("\n═══ PFB PSD ═══")
+    resp = await send(build_payload("pfb", iq_data))
+
+    if resp is None or resp.get("status") != "ok":
+        print(f"  ERROR: {resp}")
+        return
+
+    pxx = resp.get("Pxx", [])
+    print(f"  Band:     {resp.get('start_freq_hz', 0)/1e6:.2f} – {resp.get('end_freq_hz', 0)/1e6:.2f} MHz")
+    print(f"  Pxx bins: {len(pxx)}")
+
+    if len(pxx) > 0:
+        pxx_arr = np.array(pxx)
+        print(f"  Range:    [{pxx_arr.min():.1f}, {pxx_arr.max():.1f}] dB")
+        print(f"  Mean:     {pxx_arr.mean():.1f} dB")
+
+        freqs = np.linspace(0, SAMPLE_RATE / 2, len(pxx))
+        from scipy.signal import find_peaks
+        peaks, props = find_peaks(pxx, prominence=3)
+        if len(peaks) > 0:
+            top = np.argsort(props["prominences"])[::-1][:3]
+            print("  Top peaks:")
+            for rank, idx in enumerate(top, 1):
+                pk = peaks[idx]
+                print(f"    {rank}. {freqs[pk]:8.1f} Hz  {pxx[pk]:6.1f} dB")
+
+
+# ── Main ─────────────────────────────────────────────────────────────
+async def run():
+    iq_data = generate_iq(SAMPLE_RATE, N_SAMPLES)
+    print(f"Generated {N_SAMPLES} IQ samples ({FREQ_1} Hz + {FREQ_2} Hz tones)")
+
+    await demo_iq(iq_data)
+    await demo_welch(iq_data)
+    await demo_pfb(iq_data)
+
+    print("\nDone.")
 
 
 if __name__ == "__main__":
