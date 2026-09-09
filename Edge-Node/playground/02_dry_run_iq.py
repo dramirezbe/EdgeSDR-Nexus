@@ -21,7 +21,7 @@ IPC_ADDR = "ipc:///tmp/rf_engine"
 
 # ── Signal parameters ────────────────────────────────────────────────
 SAMPLE_RATE = 8_000_000       # 8 MS/s
-N_SAMPLES = 20_000_000        # 2.5 s of data (~400 MB JSON payload)
+N_SAMPLES = 2_500            # 0.3 ms of data (~50 KB JSON — fits C ZBUF_SIZE=64KB)
 FREQ_1 = 1000                 # 1 kHz tone
 FREQ_2 = 5000                 # 5 kHz tone
 AMPLITUDE_1 = 0.5
@@ -60,7 +60,7 @@ def build_payload(iq_data: list) -> dict:
 
 
 async def run():
-    payload_bytes = N_SAMPLES * 2 * 10  # rough JSON estimate: 40M floats × ~10 chars
+    payload_bytes = N_SAMPLES * 2 * 10  # rough JSON estimate: each float ≈ 10 chars
     print(f"Generating {N_SAMPLES} IQ samples ({FREQ_1} Hz + {FREQ_2} Hz tones) ...")
     print(f"  Payload estimate: ~{payload_bytes / 1e6:.0f} MB JSON")
 
@@ -68,7 +68,7 @@ async def run():
     payload = build_payload(iq_data)
 
     # max_queue=-1: lift SNDHWM/RCVHWM limits for large IQ payloads
-    async with ZmqPairController(IPC_ADDR, is_server=False, max_queue=-1) as ctrl:
+    async with ZmqPairController(IPC_ADDR, is_server=True, max_queue=-1) as ctrl:
         print(f"Sending dry-run IQ request to {IPC_ADDR} ...")
         try:
             resp = await ctrl.request(payload)

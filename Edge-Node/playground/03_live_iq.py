@@ -20,7 +20,7 @@ IPC_ADDR = "ipc:///tmp/rf_engine"
 # ── Payload ───────────────────────────────────────────────────────────
 PAYLOAD = {
     "center_freq_hz": 98_000_000,      # 98 MHz FM band
-    "sample_rate_hz": 8_000_000,       # 8 MS/s
+    "sample_rate_hz": 20_000_000,       # 20 MS/s
     "method_psd": "iq",                # IQ mode — raw complex samples
     "demodulation": None,              # no audio demod
     "lna_gain": 16,
@@ -34,7 +34,7 @@ PAYLOAD = {
 
 
 async def run():
-    async with ZmqPairController(IPC_ADDR, is_server=False) as ctrl:
+    async with ZmqPairController(IPC_ADDR, is_server=True) as ctrl:
         print(f"Sending live IQ request to {IPC_ADDR} ...")
         try:
             resp = await ctrl.request(PAYLOAD)
@@ -76,13 +76,6 @@ async def run():
 
     print(f"  First 6:    {iq[:6]}")
     print(f"  Mean power: {power:.6f} (first 1000 samples)")
-
-    # ── Optional: save to file ────────────────────────────────────────
-    out_file = "iq_capture.bin"
-    with open(out_file, "wb") as f:
-        for val in iq:
-            f.write(struct.pack("d", val))
-    print(f"  Saved to:   {out_file} ({len(iq) * 8} bytes)")
 
 
 if __name__ == "__main__":

@@ -35,7 +35,7 @@ PAYLOAD = {
 
 
 async def run():
-    async with ZmqPairController(IPC_ADDR, is_server=False) as ctrl:
+    async with ZmqPairController(IPC_ADDR, is_server=True) as ctrl:
         print(f"Sending PFB request to {IPC_ADDR} ...")
         try:
             resp = await ctrl.request(PAYLOAD)
