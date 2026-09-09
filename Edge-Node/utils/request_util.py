@@ -339,7 +339,13 @@ class ZmqPairController:
             print(f"[PY] >> Comando enviado")
 
     async def wait_for_data(self) -> dict | None:
-        """Espera una respuesta y retorna `None` si vence `timeout_ms`."""
+        """Espera una respuesta y retorna `None` si vence `timeout_ms`.
+
+        Handles both single-frame (JSON) and multipart (JSON header + binary)
+        replies from the C RF engine.  When the first frame has the RCVMORE
+        flag set, the second frame is treated as raw int8 interleaved IQ data
+        and decoded into a flat Python list of floats.
+        """
         if not self.socket:
             raise RuntimeError("Socket no iniciado.")
         if not self._awaiting_reply:
@@ -347,11 +353,26 @@ class ZmqPairController:
 
         try:
             if await self.socket.poll(self.timeout_ms, zmq.POLLIN):
-                msg = await self.socket.recv_string()
+                # Frame 0: always JSON header
+                header_bytes = await self.socket.recv()
+                header = json.loads(header_bytes.decode("utf-8"))
+
+                # Check if there is a binary frame attached (IQ mode)
+                if self.socket.getsockopt(zmq.RCVMORE):
+                    raw = await self.socket.recv()
+                    encoding = header.get("encoding", -1)
+                    if encoding == 0:
+                        # Interleaved int8: [I0, Q0, I1, Q1, ...]
+                        header["iq"] = [float(b) if b < 128 else float(b - 256)
+                                        for b in raw]
+                    else:
+                        # Unknown encoding — attach raw bytes as hex for debugging
+                        header["iq_raw_hex"] = raw.hex()
+
                 self._awaiting_reply = False
                 if self.verbose:
                     print(f"[PY] << Datos recibidos")
-                return json.loads(msg)
+                return header
         except zmq.ZMQError:
             self._reopen_socket()
             raise

@@ -287,11 +287,13 @@ int find_params_psd(DesiredCfg_t desired, SDR_cfg_t *hack_cfg, PsdConfig_t *psd_
         hack_cfg->center_freq_corrected = (uint64_t)((double)desired.center_freq * correction);
     }
 
-    // Target smaller IQ chunk for lower latency/load.
-    // Use Fs/4 bytes as requested, but keep coherence with PSD needs:
-    // - Ensure at least one FFT segment worth of interleaved IQ bytes.
-    // - Ensure an even number of bytes (I,Q pairs).
-    const double target_chunk_bytes = desired.sample_rate / 4.0;
+    // Target IQ chunk size based on mode:
+    // - IQ mode: use full 1-second capture (sample_rate bytes = sample_rate IQ points)
+    //   to maximize throughput for raw IQ transfers.
+    // - PSD mode: use Fs/4 for lower latency/load while keeping ≥1 FFT segment.
+    const double target_chunk_bytes = (desired.method_psd == IQ)
+        ? desired.sample_rate          /* 1 second of interleaved IQ */
+        : desired.sample_rate / 4.0;   /* PSD: quarter-second chunks */
     size_t min_chunk_bytes = (size_t)psd_cfg->nperseg * 2U;
     if (min_chunk_bytes < 2048U) min_chunk_bytes = 2048U;
 

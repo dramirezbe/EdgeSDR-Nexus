@@ -1013,25 +1013,51 @@ static int publish_iq_results(
 
     cJSON_AddStringToObject(root, "status", "ok");
     cJSON_AddStringToObject(root, "mode", "iq");
+    cJSON_AddNumberToObject(root, "center_freq_hz", (double)original_center_freq);
     cJSON_AddNumberToObject(root, "start_freq_hz", start_freq);
     cJSON_AddNumberToObject(root, "end_freq_hz", end_freq);
     cJSON_AddNumberToObject(root, "sample_rate_hz", fs);
     cJSON_AddNumberToObject(root, "n_samples", (double)n_samples);
+    cJSON_AddNumberToObject(root, "encoding", 0); /* 0 = interleaved int8 binary */
 
-    // Serialize interleaved [I0, Q0, I1, Q1, ...]
-    double *interleaved = (double*)malloc(n_samples * 2 * sizeof(double));
-    if (!interleaved) { cJSON_Delete(root); return -1; }
+    /* Convert double complex → interleaved int8 for compact binary transfer.
+     * 20M complex samples → 40 MB binary vs ~1.6 GB JSON double array. */
+    int8_t *raw_iq = (int8_t*)malloc(n_samples * 2);
+    if (!raw_iq) { cJSON_Delete(root); return -1; }
     for (size_t i = 0; i < n_samples; ++i) {
-        interleaved[2*i]     = creal(iq_data[i]);
-        interleaved[2*i + 1] = cimag(iq_data[i]);
+        double r = creal(iq_data[i]);
+        double im = cimag(iq_data[i]);
+        raw_iq[2*i]     = (int8_t)(r > 127.0 ? 127 : (r < -128.0 ? -128 : (int8_t)r));
+        raw_iq[2*i + 1] = (int8_t)(im > 127.0 ? 127 : (im < -128.0 ? -128 : (int8_t)im));
     }
-    cJSON_AddItemToObject(root, "iq",
-        cJSON_CreateDoubleArray(interleaved, (int)(n_samples * 2)));
-    free(interleaved);
 
-    int rc = send_json_reply(root);
+    /* ZMQ multipart send: frame 0 = JSON header, frame 1 = raw IQ bytes */
+    char *json_header = cJSON_PrintUnformatted(root);
     cJSON_Delete(root);
-    return rc;
+    if (!json_header) { free(raw_iq); return -1; }
+
+    size_t header_len = strlen(json_header);
+
+    void *socket = zmq_channel->socket;
+    int rc = zmq_send(socket, json_header, header_len, ZMQ_SNDMORE);
+    free(json_header);
+    if (rc < 0) {
+        fprintf(stderr, "[ZMQ] IQ header send failed: %s\n", zmq_strerror(zmq_errno()));
+        free(raw_iq);
+        return -1;
+    }
+
+    size_t raw_len = n_samples * 2;
+    rc = zmq_send(socket, raw_iq, raw_len, 0);
+    free(raw_iq);
+    if (rc < 0) {
+        fprintf(stderr, "[ZMQ] IQ binary send failed: %s\n", zmq_strerror(zmq_errno()));
+        return -1;
+    }
+
+    printf("[RF]>>>>>zmq (IQ binary: %zu bytes header + %zu bytes data)\n",
+           header_len, raw_len);
+    return 0;
 }
 
 /**
