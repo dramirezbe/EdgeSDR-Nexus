@@ -1,0 +1,684 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{booktabs}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{geometry}
+\usepackage{enumitem}
+\geometry{margin=2.5cm}
+
+\lstset{
+  language=C,
+  basicstyle=\ttfamily\small,
+  keywordstyle=\color{blue},
+  commentstyle=\color{gray},
+  stringstyle=\color{red},
+  breaklines=true,
+  frame=single,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+}
+
+\newcommand{\where}[1]{\textcolor{violet}{\texttt{[#1]}}}
+
+\title{\textbf{Análisis Matemático del Motor DSP de EdgeSDR-Nexus}\\\large Respuestas basadas en código fuente verificado}
+\author{Generado por inspección de código}
+\date{Septiembre 2026}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+%% ============================================================
+\section{Qué representa \texttt{Pxx} y sus unidades}
+\label{sec:pxx}
+
+\where{Node/C — motor de cómputo espectral}
+
+\subsection{Definición}
+
+\texttt{Pxx} es la \textbf{densidad espectral de potencia (PSD)} calculada mediante el método \textbf{PFB (Polyphase Filter Bank)} por defecto, o Welch (configurable), expresada en \textbf{dBm relativo a la escala digital del ADC, asumiendo impedancia de 50~$\Omega$}.
+
+\textbf{Fuente:} \texttt{Edge-Node/rf/libs/psd.h}, líneas 179--224.
+
+\begin{quote}
+\small\textit{``Los valores en dBm son relativos a la escala digital del ADC. Para obtener potencia RF absoluta es necesaria una calibración externa.''}
+\end{quote}
+
+\subsection{Método por defecto: PFB}
+
+El orquestador (\texttt{orchestrator.py}, línea 346) y el campaign runner (\texttt{campaign\_runner.py}, línea 90) envían \texttt{method\_psd="pfb"} por defecto. El motor C (\texttt{parser.c}, línea 53) usa Welch como fallback si el campo no se especifica.
+
+La arquitectura PFB consiste en:
+\begin{enumerate}
+\item Un filtro FIR prototipo $h[n]$ de longitud $L = M \cdot T$ (ventana Kaiser, $\beta = 8{,}6$).
+\item $T = 8$ taps por canal, $M = \texttt{nperseg}$ canales.
+\item El filtro se descompone en $T$ componentes polifase $p_t[m] = h[tM + m]$.
+\item Para cada bloque de entrada, se aplica el filtro polifase y luego una FFT de tamaño $M$.
+\end{enumerate}
+
+\textbf{Fuente:} \texttt{psd.c}, líneas 677--847 (\texttt{execute\_pfb\_psd}).
+
+\subsection{Fórmula completa (PFB)}
+
+Sean $x[n]$ las muestras I/Q del ADC ($n \in [-128, 127]$, int8), $F_s$ la frecuencia de muestreo, $M = \texttt{nperseg}$ el número de canales, $T = 8$ taps por canal, $L = M \cdot T$ la longitud del filtro, y $B$ el número de bloques procesados ($B = \lfloor(N - L)/M\rfloor$, donde $N$ es el total de muestras).
+
+\subsubsection{Filtro prototipo Kaiser}
+
+\begin{equation}
+h[n] = \frac{I_0\!\left(\beta \sqrt{1 - \left(\frac{2n}{L-1} - 1\right)^2}\right)}{I_0(\beta)}, \quad \beta = 8{,}6
+\label{eq:kaiser}
+\end{equation}
+
+donde $I_0(x) = \sum_{k=0}^{\infty} \frac{(x^2/4)^k}{(k!)^2}$ es la función de Bessel modificada. $\beta = 8{,}6$ proporciona $\sim 80$~dB de atenuación de lóbulos laterales.
+
+\textbf{Fuente:} \texttt{psd.c}, líneas 668--674.
+
+\subsubsection{Componentes polifase}
+
+\begin{equation}
+p_t[m] = h[t \cdot M + m], \quad t = 0, \ldots, T{-}1, \quad m = 0, \ldots, M{-}1
+\label{eq:polyphase}
+\end{equation}
+
+\subsubsection{Procesamiento por bloque}
+
+Para cada bloque $b$:
+
+\begin{equation}
+X_b[m] = \text{FFT}_M \left\{ \sum_{t=0}^{T-1} x[bM + tM + m] \cdot p_t[m] \right\}
+\label{eq:pfb_block}
+\end{equation}
+
+Se acumula la magnitud al cuadrado:
+
+\begin{equation}
+S[m] = \sum_{b=0}^{B-1} |X_b[m]|^2
+\label{eq:pfb_accum}
+\end{equation}
+
+\subsubsection{Escalado final}
+
+\begin{equation}
+\hat{P}(m) = \frac{S[m]}{B \cdot F_s \cdot M}
+\label{eq:pfb_scale}
+\end{equation}
+
+\textbf{Fuente:} \texttt{psd.c}, línea 823:
+\begin{lstlisting}[language=C]
+double scale = 1.0 / (blocks * fs * M);
+\end{lstlisting}
+
+\textbf{Nota:} A diferencia de Welch, el PFB \textbf{no usa factor de energía de ventana} ($U$). La atenuación de leakage está controlada por el diseño del filtro Kaiser prototipo, no por una normalización adicional.
+
+\subsection{Método alternativo: Welch}
+
+Cuando \texttt{method\_psd="welch"}, se usa el estimador clásico de Welch:
+
+\begin{equation}
+\hat{P}_{\text{Welch}}(k) = \frac{1}{K} \sum_{i=0}^{K-1} \frac{|X_i(k)|^2}{F_s \cdot L \cdot U}
+\label{eq:welch_raw}
+\end{equation}
+
+donde $U = \frac{1}{L}\sum_{n=0}^{L-1} |w[n]|^2$ es la energía normalizada de la ventana, $K$ el número de segmentos traslapados, y $L = \texttt{nperseg}$.
+
+\textbf{Fuente:} \texttt{psd.c}, línea 598:
+\begin{lstlisting}[language=C]
+double scale = 1.0 / (fs * u_norm * k_segments * nperseg);
+\end{lstlisting}
+
+\subsection{Conversión a dBm}
+
+Ambos métodos convierten el resultado lineal a dBm mediante:
+
+\begin{equation}
+P_{\text{dBm}}(k) = 10 \log_{10}\!\left(\frac{\hat{P}(k)}{50} \times 1000\right) = 10 \log_{10}\!\big(\hat{P}(k)\big) + 13{,}01
+\label{eq:dbm}
+\end{equation}
+
+\textbf{Fuente:} \texttt{psd.c}, líneas 319--331 (\texttt{convert\_to\_dbm\_inplace}).
+
+\subsection{Unidades reales}
+
+\begin{itemize}
+\item La salida cruda del PFB (o Welch) es densidad espectral de potencia.
+\item Las muestras del ADC son \textbf{enteros de 8 bits} $[-128, 127]$, sin unidades de voltaje reales.
+\item Por lo tanto, \texttt{Pxx} es \textbf{dBm relativo a la escala digital}, no dBm absoluto en la antena. Para obtener dBm absoluto se necesita calibración externa.
+\end{itemize}
+
+%% ============================================================
+\section{Cómo se normaliza el motor DSP}
+\label{sec:normalization}
+
+\where{Node/C — motor de cómputo espectral}
+
+\subsection{Normalización PFB (por defecto)}
+
+El PFB \textbf{no aplica factor de ventana separado}. La normalización es:
+
+\begin{equation}
+\text{scale} = \frac{1}{B \cdot F_s \cdot M}
+\label{eq:pfb_norm}
+\end{equation}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Factor} & \textbf{Valor} & \textbf{Propósito} \\
+\midrule
+$B$ & Bloques procesados & Promedio sobre bloques \\
+$F_s$ & Frecuencia de muestreo & Convertir a densidad por Hz \\
+$M$ & Número de canales (nperseg) & Normalizar amplitud de FFT \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El filtro Kaiser prototipo ($\beta = 8{,}6$) controla el leakage espectral mediante su diseño, no mediante una normalización adicional.
+
+\subsection{Normalización Welch (alternativa)}
+
+Cuando se selecciona Welch, la normalización incluye el factor de energía de ventana:
+
+\begin{equation}
+U = \frac{1}{L} \sum_{n=0}^{L-1} |w[n]|^2
+\label{eq:u_norm}
+\end{equation}
+
+\begin{equation}
+\text{scale}_{\text{Welch}} = \frac{1}{F_s \cdot U \cdot K \cdot L}
+\label{eq:welch_norm}
+\end{equation}
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Factor} & \textbf{División} & \textbf{Propósito} \\
+\midrule
+$F_s$ & Frecuencia de muestreo & Convertir a densidad por Hz \\
+$U$ & Energía normalizada de ventana & Compensar atenuación de ventana \\
+$K$ & Número de segmentos & Promedio de Welch \\
+$L$ & Longitud de segmento (nperseg) & Normalizar amplitud de FFT \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Integración de potencia y uso de $\Delta f$}
+\label{sec:integration}
+
+\where{Back/Postprocesamiento — \texttt{power\_utils.py}, \texttt{spectral\_analysis.py}}
+
+\subsection{Conversión dBm $\to$ W/Hz}
+
+\texttt{SpectrumFrame.to\_power\_w()} (\texttt{spectrum\_frame.py}, línea 62):
+
+\begin{equation}
+P_{\text{W/Hz}} = 10^{\frac{P_{\text{dBm}} - 30}{10}}
+\label{eq:dbm_to_w}
+\end{equation}
+
+\textbf{Nota:} Esta conversión trata las amplitudes como W/Hz, consistente con la salida del motor PSD (densidad espectral).
+
+\subsection{Integración discreta uniforme}
+
+\texttt{channel\_power\_dbm\_uniform\_bins()} (\texttt{power\_utils.py}, línea 118):
+
+\begin{equation}
+P_{\text{W}} = \sum_{k} P_{\text{W/Hz}}(k) \cdot \Delta f_{\text{bin}}
+\label{eq:discrete}
+\end{equation}
+
+donde $\Delta f_{\text{bin}}$ se obtiene de \texttt{frame.bin\_hz} o, si no está disponible, de la mediana de $|\Delta f|$ entre bins vecinos.
+
+\begin{lstlisting}[language=Python]
+p_w = float(np.sum(p_w_per_hz) * bin_hz)
+return 10.0 * float(np.log10(p_w / 1e-3))
+\end{lstlisting}
+
+\textbf{Fuente:} \texttt{power\_utils.py}, líneas 97--131.
+
+\subsection{Integración trapezoidal}
+
+\texttt{measure\_channel\_power()} (\texttt{spectral\_analysis.py}, línea 1815):
+
+\begin{equation}
+P_{\text{W}} = \int P_{\text{W/Hz}}(f)\, df \approx \text{trapz}\big(P_{\text{W/Hz}}, f\big)
+\label{eq:trapz}
+\end{equation}
+
+\textbf{Sí, se usa $\Delta f$ siempre.} La integración es \textbf{absoluta} (no por bin), multiplicando la densidad espectral por el ancho de frecuencia correspondiente.
+
+\subsection{Ruta especial para TDT/banda ancha Colombia}
+
+Para spans $\geq 2$~MHz sobre la banda 470--698~MHz, \texttt{power\_utils.py} línea 112 usa el \textbf{nivel medio} en banda en lugar de integrar:
+
+\begin{equation}
+P_{\text{dBm}} = 10 \log_{10}\!\left(\frac{\bar{P}_{\text{W/Hz}}}{10^{-3}}\right)
+\label{eq:mean_power}
+\end{equation}
+
+%% ============================================================
+\section{¿Es \texttt{power\_dbm} absoluto o relativo?}
+\label{sec:power_dbm}
+
+\where{Back/Postprocesamiento — \texttt{processor.py}; Node/C — motor PFB}
+
+\texttt{power\_dbm} es la \textbf{potencia integrada en la banda de la emisión} calculada como:
+
+\begin{equation}
+\texttt{power\_dbm} = \texttt{channel\_power\_dbm\_uniform\_bins}(\text{sub-emisión})
+\label{eq:power_dbm}
+\end{equation}
+
+\textbf{Fuente:} \texttt{processor.py}, línea 902.
+
+\textbf{Es relativo al ADC.} Los valores provienen de la cadena:
+
+\begin{enumerate}
+\item \where{Node/C} ADC int8 $\to$ muestras $x[n] \in [-128, 127]$
+\item \where{Node/C} Motor DSP (PFB por defecto) con normalización por $B, F_s, M$
+\item \where{Node/C} Conversión a dBm con offset de 50~$\Omega$ (\texttt{convert\_to\_dbm\_inplace})
+\item \where{Back} Integración sobre la banda de emisión
+\end{enumerate}
+
+No hay corrección por ganancia de LNA/VGA/AMP, pérdida de cable, ni factor de ruido del receptor. El dBm es \textbf{histórico/nominal}, no absoluto en la antena.
+
+%% ============================================================
+\section{Cómo funciona \texttt{Cumple\_P}}
+\label{sec:cumple_p}
+
+\where{Back/Postprocesamiento — \texttt{processor.py}; API/Compliance — CSV licencias ANE}
+
+\subsection{Fórmula}
+
+\texttt{Cumple\_P} es una comparación umbral directa:
+
+\begin{equation}
+\texttt{Cumple\_P} = \begin{cases}
+\texttt{``SI''} & \text{si } P_{\text{medida}} \leq P_{\text{nominal}} \\
+\texttt{``NO''} & \text{si } P_{\text{medida}} > P_{\text{nominal}}
+\end{cases}
+\label{eq:cumple_p}
+\end{equation}
+
+\textbf{Fuente:} \texttt{processor.py}, líneas 1612--1617:
+\begin{lstlisting}[language=Python]
+if lic_match == "SI" and p_nominal_dBm is not None and p_medida_dBm is not None:
+    try:
+        cumple_p = "SI" if float(p_medida_dBm) <= float(p_nominal_dBm) else "NO"
+    except Exception:
+        cumple_p = None
+\end{lstlisting}
+
+\subsection{Valores de entrada}
+
+\begin{itemize}
+\item $P_{\text{medida}}$: \texttt{p\_medida\_dBm} = resultado de \texttt{channel\_power\_dbm\_uniform\_bins()} (potencia integrada en la emisión, relativa al ADC). \where{Back}
+\item $P_{\text{nominal}}$: \texttt{p\_nominal\_dBm} = potencia de la licencia proveniente del CSV de la ANE, convertida a dBm por \texttt{\_power\_to\_dbm()} (\texttt{calibration\_io.py}, línea 353). \where{API/Compliance}
+\end{itemize}
+
+\subsection{Conversión de la licencia}
+
+\texttt{\_power\_to\_dbm()} acepta dBm, dBW, W, mW, kW, $\mu$W y los convierte todos a dBm:
+
+\begin{lstlisting}[language=Python]
+def _power_to_dbm(p: float, unit: str) -> float:
+    if u in ("DBM", "DB", "DBM."): return float(p)
+    if u in ("DBW", "DBW."):       return float(p) + 30.0
+    if u in ("W", "WATTS", "WATT"): return 10.0 * math.log10(p) + 30.0
+    # ... etc
+\end{lstlisting}
+
+\textbf{Fuente:} \texttt{calibration\_io.py}, líneas 353--403.
+
+%% ============================================================
+\section{De dónde sale \texorpdfstring{$1{,}363$}{1.363} y cómo se calcula la RBW}
+\label{sec:enbw}
+
+\where{Node/C — \texttt{psd.c}, \texttt{psd.h}}
+
+\subsection{El valor en el código}
+
+\texttt{get\_window\_enbw\_factor()} (\texttt{psd.c}, línea 336) retorna un valor \textbf{hardcodeado}:
+
+\begin{lstlisting}[language=C]
+case HAMMING_TYPE: return 1.363;
+\end{lstlisting}
+
+\textbf{Nota importante:} Este factor se usa \textbf{exclusivamente} en \texttt{find\_params\_psd()} para calcular $N_{\text{FFT}}$ a partir de la RBW deseada. El PFB \textbf{no utiliza} este factor en su normalización; el Welch sí.
+
+\textbf{Nota:} El valor $1{,}3008$ \textbf{no existe} en el código fuente. El valor real usado es $\textbf{1.363}$.
+
+\subsection{Fórmula teórica del ENBW}
+
+El Equivalent Noise Bandwidth de una ventana se define como:
+
+\begin{equation}
+\text{ENBW} = N \cdot \frac{\displaystyle\sum_{n=0}^{N-1} |w[n]|^2}{\left(\displaystyle\sum_{n=0}^{N-1} w[n]\right)^2}
+\label{eq:enbw_def}
+\end{equation}
+
+Para la ventana Hamming estándar $w[n] = 0{,}54 - 0{,}46\cos(2\pi n/M)$ con $N$ grande:
+
+\begin{align}
+\frac{1}{N}\sum w[n]^2 &\to 0{,}54^2 + \frac{0{,}46^2}{2} = 0{,}2916 + 0{,}1058 = 0{,}3974 \\
+\left(\frac{1}{N}\sum w[n]\right)^2 &\to 0{,}54^2 = 0{,}2916
+\end{align}
+
+\begin{equation}
+\text{ENBW} = \frac{0{,}3974}{0{,}2916} \approx 1{,}3628 \approx 1{,}363
+\label{eq:enbw_calc}
+\end{equation}
+
+\subsection{Verificación numérica}
+
+Se verificó computando los coeficientes reales de NumPy/SciPy:
+
+\begin{verbatim}
+numpy hamming (N=1024):           ENBW = 1.363784
+scipy hamming sym=True (N=1024):  ENBW = 1.363784
+Analytical (a0=0.54, a1=0.46):   ENBW = 1.362826
+\end{verbatim}
+
+El valor $1{,}363$ en el código es una aproximación redondeada a 3 decimales del ENBW teórico de Hamming, consistente con la implementación de la ventana $w[n] = 0{,}54 - 0{,}46\cos(2\pi n/M)$.
+
+\subsection{Cómo se usa el ENBW en el código}
+
+El factor ENBW se usa en \texttt{find\_params\_psd()} (\texttt{psd.c}, líneas 254--304) para calcular $N_{\text{FFT}}$:
+
+\begin{equation}
+N_{\text{FFT}} = 2^{\lceil \log_2(\text{ENBW} \times F_s / \text{RBW}_{\text{deseada}}) \rceil}
+\label{eq:nfft_from_rbw}
+\end{equation}
+
+\begin{lstlisting}[language=C]
+double enbw_factor = get_window_enbw_factor(desired.window_type);
+double required_nperseg_val = enbw_factor * desired.sample_rate / safe_rbw;
+int exponent = (int)ceil(log2(required_nperseg_val));
+psd_cfg->nperseg = (int)pow(2, exponent);
+\end{lstlisting}
+
+\subsection{Cálculo de la RBW efectiva}
+
+La RBW efectiva es:
+
+\begin{equation}
+\text{RBW}_{\text{efectiva}} = \text{ENBW} \times \frac{F_s}{N_{\text{FFT}}}
+\label{eq:rbw}
+\end{equation}
+
+Se \textbf{distingue} de $\Delta f = F_s / N_{\text{FFT}}$ (espaciado de bins). Para Hamming:
+
+\begin{equation}
+\text{RBW} = 1{,}363 \times \frac{F_s}{N_{\text{FFT}}} > \Delta f
+\label{eq:rbw_vs_df}
+\end{equation}
+
+%% ============================================================
+\section{Ajuste FM: piloto de 19~kHz $\to$ ppm}
+\label{sec:fm_ppm}
+
+\where{Node/Tools — \texttt{kal\_sync\_pilot\_tone.py}, \texttt{kal\_sync\_legal\_FM.py}; Node/C — aplicación de corrección}
+
+\subsection{Método 1: Piloto de tono}
+
+\begin{enumerate}
+\item Captura I/Q a $F_c = 98$~MHz, $F_s = 20$~MHz.
+\item Desmodula FM: \texttt{audio = angle(iq[1:] * conj(iq[:-1]))}.
+\item Calcula Welch del audio (decimado a 200~kHz).
+\item Busca picos en la banda 18--20~kHz, identifica el piloto estéreo.
+\item Refina la frecuencia del piloto con interpolación espectral.
+\item Calcula el offset fino $\Delta f$ buscando simetría espectral:
+
+\begin{equation}
+\Delta f^* = \arg\min_{d} \frac{1}{N}\sum_u \frac{\big(\hat{P}(d-u) - \hat{P}(d+u)\big)^2}{\hat{P}(d-u) + \hat{P}(d+u)}
+\label{eq:fine_offset}
+\end{equation}
+
+\item Convierte a ppm:
+
+\begin{equation}
+\text{ppm} = \frac{\Delta f^*}{f_{\text{estación}}} \times 10^6
+\label{eq:ppm}
+\end{equation}
+\end{enumerate}
+
+\textbf{Fuente:} \texttt{kal\_sync\_pilot\_tone.py}, líneas 112--120.
+
+\subsection{Método 2: Frecuencias legales}
+
+\begin{enumerate}
+\item Descarga la base de datos de frecuencias legales de la ANE (CSV con lat/lng). \where{DB}
+\item Selecciona emisoras FM dentro de un radio de cobertura.
+\item Detecta picos en el espectro PSD y los matchea con las frecuencias legales:
+
+\begin{equation}
+\text{ppm}_i = \frac{f_{\text{medida},i} - f_{\text{legal},i}}{f_{\text{legal},i}} \times 10^6
+\label{eq:ppm_legal}
+\end{equation}
+
+\item Usa \textbf{descenso de gradiente} para minimizar el error ppm residual:
+
+\begin{equation}
+c_{n+1} = c_n - \eta \cdot \text{error}(c_n), \quad \eta = 0{,}8
+\label{eq:gradient}
+\end{equation}
+
+\item Convergencia: early stopping si $|\text{error}| < 1$~ppm o paciencia agotada.
+\end{enumerate}
+
+\textbf{Fuente:} \texttt{kal\_sync\_legal\_FM.py}, líneas 128--189.
+
+\subsection{Almacenamiento y aplicación}
+
+El valor ppm se guarda en \texttt{/dev/shm/persistent.json} como \texttt{ppm\_error} \where{Node/SHM} y se aplica en el motor C \where{Node/C}:
+
+\begin{equation}
+f_{\text{corregida}} = f_{\text{nominal}} \times \left(1 + \frac{\text{ppm}}{10^6}\right)
+\label{eq:ppm_apply}
+\end{equation}
+
+\textbf{Fuente:} \texttt{psd.c}, líneas 286--287.
+
+%% ============================================================
+\section{Centroide, MER y BER}
+\label{sec:mer_ber}
+
+\where{Back/Postprocesamiento — \texttt{spectral\_analysis.py}}
+
+\subsection{Centroide}
+
+\textbf{No existe una función explícita de centroide espectral} en el código. El ``centro'' de una emisión se calcula como:
+
+\begin{equation}
+f_{\text{centro}} = \frac{f_{\text{inicio}} + f_{\text{fin}}}{2} \quad \text{o} \quad f_{\text{centro}} = f[k_{\text{pico}}]
+\label{eq:center}
+\end{equation}
+
+El cálculo de OBW (\texttt{\_obw\_99\_limits\_in\_segment}, \texttt{spectral\_analysis.py}) encuentra los límites de frecuencia que contienen el 99\% de la potencia y reporta:
+
+\begin{equation}
+f_{\text{OBW}} = \frac{f_{i_0} + f_{i_1}}{2}
+\label{eq:obw_center}
+\end{equation}
+
+\subsection{MER (Modulation Error Ratio)}
+
+El MER es una \textbf{estimación heurística basada en la forma del espectro}, no una medición de constelación.
+
+\textbf{Fuente:} \texttt{spectral\_analysis.py}, función \texttt{estimate\_mer\_ber\_from\_spectrum\_tdt()}, líneas 1986--2058.
+
+\subsubsection{Paso 1: Ruido de fondo}
+
+Se usa el percentil 50 de la banda guardia inferior, con estimador robusto MAD:
+
+\begin{equation}
+P_{\text{NF}} = \text{mediana}(y_{\text{guardia, baja}}) + 0{,}15 \times 1{,}4826 \times \text{MAD}(y_{\text{guardia, baja}})
+\label{eq:nf}
+\end{equation}
+
+\subsubsection{Paso 2: SNR (Carrier-to-Noise)}
+
+\begin{equation}
+C/N = 10\log_{10}\!\left(\frac{\overline{\max(P_{\text{señal}} - P_{\text{NF}},\; 0)}}{P_{\text{NF}}}\right)
+\label{eq:cn}
+\end{equation}
+
+\subsubsection{Paso 3: Métricas espectrales}
+
+\begin{align}
+\text{exceso}_{\text{med}} &= \text{mediana}(y_{\text{canal}}) - P_{\text{NF}} \\
+\text{exceso}_{\text{p90}} &= P_{90}(y_{\text{canal}}) - P_{\text{NF}} \\
+\text{ripple} &= \text{desv. estándar}\big(y_{\text{canal}} - \text{mediana}(y_{\text{canal}})\big) \\
+\text{notch} &= \max\!\big(0,\; \text{mediana}(y_{\text{canal}}) - P_{10}(y_{\text{canal}})\big) - 1{,}5
+\label{eq:metrics}
+\end{align}
+
+\subsubsection{Paso 4: Fórmula del MER}
+
+\begin{equation}
+\boxed{
+\text{MER} = 0{,}55 \cdot \frac{C}{N} + 0{,}30 \cdot \text{exceso}_{\text{p90}} + 0{,}15 \cdot \text{exceso}_{\text{med}} - 0{,}35 \cdot \text{ripple} - 0{,}20 \cdot \text{notch}
+}
+\label{eq:mer}
+\end{equation}
+
+con $\text{MER} \in [0, 40]$~dB (recortado).
+
+\textbf{Nota:} Esta es una regresión heurística ponderada, \textbf{no} una medición de MER de constelación. Es válida solo para TDT (UHF 470--698~MHz, 64-QAM).
+
+\subsection{BER (Bit Error Rate)}
+
+El BER se estima \textbf{a partir del MER} usando la fórmula teórica de M-QAM en AWGN:
+
+\begin{equation}
+\boxed{
+\text{BER} = \frac{4}{k}\left(1 - \frac{1}{\sqrt{M}}\right) Q\!\left(\sqrt{\frac{3k \cdot \text{SNR}_{\text{lin}}}{M - 1}}\right)
+}
+\label{eq:ber}
+\end{equation}
+
+donde $k = \log_2 M$, $M$ es el orden de la modulación, $\text{SNR}_{\text{lin}} = 10^{\text{MER}/10}$, y $Q(x) = \frac{1}{2}\text{erfc}(x/\sqrt{2})$.
+
+\textbf{Fuente:} \texttt{spectral\_analysis.py}, líneas 2053--2058.
+
+\textbf{Conclusión:} MER y BER \textbf{no} provienen de demodulación real ni de extracción de constelación. Son estimaciones basadas en la forma del espectro y el modelo teórico de M-QAM en AWGN.
+
+%% ============================================================
+\section{Calibración real: qué existe y qué corrige}
+\label{sec:calibration}
+
+\where{Node/Tools — calibración; Node/C — aplicación de corrección; Back — corrección de ganancia}
+
+\subsection{Calibración de frecuencia (PPM)}
+
+\begin{itemize}
+\item \textbf{Qué hace:} Corrige el error de frecuencia del oscilador local del HackRF. \where{Node/Tools}
+\item \textbf{Método:} Usa emisoras FM legales como referencia (\texttt{kal\_sync\_legal\_FM.py}) o el piloto estéreo de 19~kHz (\texttt{kal\_sync\_pilot\_tone.py}).
+\item \textbf{Almacenamiento:} \texttt{ppm\_error} en \texttt{/dev/shm/persistent.json}. \where{Node/SHM}
+\item \textbf{Aplicación:} $f_{\text{corregida}} = f_{\text{nominal}} \cdot (1 + \text{ppm}/10^6)$ en el motor C. \where{Node/C}
+\end{itemize}
+
+\subsection{Corrección de ganancia por frecuencia}
+
+\begin{itemize}
+\item \textbf{Qué hace:} Aplica una corrección aditiva en dB interpolada por frecuencia. \where{Back}
+\item \textbf{Archivo:} CSV con columnas ``Frecuencia (MHz)'' y ``Error (dB)'', cargado vía \texttt{-{}-corr-csv}.
+\item \textbf{Fórmula:}
+
+\begin{equation}
+A_{\text{corregida}}(f) = A(f) + \text{interp}\big(f,\; \text{CSV}\big)
+\label{eq:gain_corr}
+\end{equation}
+
+\item \textbf{Fuente:} \texttt{processor.py}, líneas 155--170 (\texttt{apply\_gain\_correction}).
+\end{itemize}
+
+\subsection{Compensación de desbalance I/Q}
+
+\begin{itemize}
+\item \textbf{Qué hace:} Corrección ciega de 3 etapas: eliminación DC $\to$ balance de ganancia $\to$ decorrelación de fase. \where{Node/C}
+\item \textbf{Fuente:} \texttt{psd.c}, líneas 61--194 (\texttt{iq\_compensation}).
+\end{itemize}
+
+\subsection{Lo que NO existe}
+
+\begin{itemize}
+\item \textbf{No hay calibración absoluta de potencia del ADC.} El comentario en \texttt{psd.h} lo confirma explícitamente.
+\item \textbf{No hay calibración de factor de ruido (NF) del receptor.}
+\item \textbf{No hay calibración de ganancia de LNA/VGA/AMP por frecuencia.}
+\item \textbf{No hay corrección de pérdidas de cable/antena.}
+\item \textbf{No hay archivo de calibración por sensor individual.}
+\end{itemize}
+
+\subsection{Resumen de capas de calibración}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Capa} & \textbf{Corrige} & \textbf{Ubicación} & \textbf{Método} \\
+\midrule
+PPM (frecuencia) & Error del oscilador local & Node/Tools $\to$ Node/C & FM legal / piloto 19~kHz \\
+Ganancia (relativa) & Respuesta en freq. relativa & Back & CSV \texttt{-{}-corr-csv} \\
+I/Q imbalance & Desbalance ganancia/fase & Node/C & Blind correction \\
+\midrule
+\textbf{Absoluta (potencia)} & \textbf{No implementada} & --- & --- \\
+\textbf{NF / LNA / VGA} & \textbf{No implementada} & --- & --- \\
+\textbf{Cable / antena} & \textbf{No implementada} & --- & --- \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section{Resumen: PFB vs Welch}
+\label{sec:pfb_vs_welch}
+
+\where{Node/C — ambos algoritmos en \texttt{psd.c}}
+
+\begin{center}
+\small
+\begin{tabular}{lcc}
+\toprule
+\textbf{Aspecto} & \textbf{PFB (defecto)} & \textbf{Welch (alternativa)} \\
+\midrule
+Método & Banco de filtros polifase & Promediado de periodogramas \\
+Filtro prototipo & Kaiser ($\beta = 8{,}6$) & Ventana configurable (Hamming) \\
+Taps/canales & $T = 8$, $M = \texttt{nperseg}$ & $L = \texttt{nperseg}$ segmentos \\
+Escala & $1/(B \cdot F_s \cdot M)$ & $1/(F_s \cdot U \cdot K \cdot L)$ \\
+Factor $U$ & No usado & Sí (energia de ventana) \\
+ENBW para RBW & No aplica directamente & Sí: $\text{ENBW} \times F_s / N_{\text{FFT}}$ \\
+Selectividad & $\sim 80$~dB (Kaiser) & Depende de ventana elegida \\
+Complejidad & O(L + M log M) por bloque & O(L log L) por segmento \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+%% ============================================================
+\section*{Referencias de archivos}
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Archivo} & \textbf{Ubicación} & \textbf{Contenido} \\
+\midrule
+\texttt{rf/libs/psd.c} & Node/C & Motor PFB/Welch, ventanas, ENBW, dBm \\
+\texttt{rf/libs/psd.h} & Node/C & Definiciones, tipos, constantes \\
+\texttt{orchestrator.py} & Node & Configuración PFB por defecto \\
+\texttt{spectrum\_frame.py} & Back & SpectrumFrame, to\_power\_w() \\
+\texttt{power\_utils.py} & Back & Integración de potencia \\
+\texttt{spectral\_analysis.py} & Back & MER/BER, OBW, emisiones \\
+\texttt{processor.py} & Back & Cumple\_P, pipeline completo \\
+\texttt{calibration\_io.py} & Back/API & Conversión de potencia, licencias ANE \\
+\texttt{kal\_sync\_pilot\_tone.py} & Node/Tools & Calibración por piloto FM \\
+\texttt{kal\_sync\_legal\_FM.py} & Node/Tools & Calibración por FM legal \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}
